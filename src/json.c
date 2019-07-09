@@ -80,13 +80,15 @@ json_t*
 json_child(json_doc_t  * __restrict doc,
            json_t      * __restrict parent,
            bool                     isvalue) {
-  json_t     *child;
+  json_t     *root, *child;
   const char *key;
   size_t      keysize;
   char        c;
 
   if (!doc->ptr || (c = *doc->ptr) == '\0')
     return NULL;
+
+  root = NULL;
 
   do {
   cont:
@@ -113,13 +115,24 @@ json_child(json_doc_t  * __restrict doc,
         json_t *object, *child;
         object = json_calloc(doc, sizeof(json_t));
 
+        if (!parent) {
+          root = object;
+        } else {
+          object->prev  = parent;
+          object->next  = parent->child;
+          parent->child = object;
+
+          root = object;
+        }
+
         ++doc->ptr;
         if ((child = json_child(doc, object, false))) {
-          child->prev   = object;
+          child->prev   = parent;
+          child->next   = object->child;
           object->child = child;
         }
 
-        return object;
+        continue;
       }
       case '[': {
         json_t *object;
@@ -134,6 +147,13 @@ json_child(json_doc_t  * __restrict doc,
     if (isvalue) {
       parent->value = json_value(&doc->ptr, &parent->valSize);
       isvalue       = false;
+
+      char jj[1024];
+      snprintf(jj, parent->valSize + 1, "%s", parent->value);
+
+      printf("value: %s(%zu)\n", jj, parent->valSize);
+
+      printf("\nparent ch: %p\n", parent);
       return NULL;
     }
 
@@ -141,10 +161,17 @@ json_child(json_doc_t  * __restrict doc,
     if (key == NULL || *key == '\0')
       break;
 
+    char jj[1024];
+    snprintf(jj, keysize + 1, "%s", key);
+
+    printf("key: %s(%zu): ", jj, keysize);
+
     /* child properties */
     child          = json_calloc(doc, sizeof(json_t));
     child->key     = key;
     child->keySize = keysize;
+
+    printf("\nchild: %p\n", child);
 
     assert(parent != child);
 
@@ -153,6 +180,8 @@ json_child(json_doc_t  * __restrict doc,
       child->next   = parent->child;
       parent->child = child;
     }
+
+    c = *doc->ptr;
 
     /* jump to value */
     do {
@@ -173,11 +202,10 @@ json_child(json_doc_t  * __restrict doc,
 
   val:
     child->child = json_child(doc, child, true);
-
-  } while (c != '\0' && (c = *++doc->ptr) != '\0');
+  } while ((c = *doc->ptr) != '\0' && (c = *++doc->ptr) != '\0');
 
 ret:
-  return NULL;
+  return root;
 }
 
 json_t*
@@ -191,7 +219,7 @@ json_parse(const char * __restrict contents) {
   ptr          = contents;
   doc->ptr = ptr;
   object       = json_calloc(doc, sizeof(json_t));
-  object       = json_child(doc, object, false);
+  object       = json_child(doc, NULL, false);
 
   return object;
 }
