@@ -148,12 +148,6 @@ json_child(json_doc_t  * __restrict doc,
       parent->value = json_value(&doc->ptr, &parent->valSize);
       isvalue       = false;
 
-      char jj[1024];
-      snprintf(jj, parent->valSize + 1, "%s", parent->value);
-
-      printf("value: %s(%zu)\n", jj, parent->valSize);
-
-      printf("\nparent ch: %p\n", parent);
       return NULL;
     }
 
@@ -161,19 +155,10 @@ json_child(json_doc_t  * __restrict doc,
     if (key == NULL || *key == '\0')
       break;
 
-    char jj[1024];
-    snprintf(jj, keysize + 1, "%s", key);
-
-    printf("key: %s(%zu): ", jj, keysize);
-
     /* child properties */
     child          = json_calloc(doc, sizeof(json_t));
     child->key     = key;
     child->keySize = keysize;
-
-    printf("\nchild: %p\n", child);
-
-    assert(parent != child);
 
     if (parent) {
       child->prev   = parent;
@@ -211,17 +196,14 @@ ret:
 json_t*
 json_parse(const char * __restrict contents) {
   json_doc_t *doc;
-  json_t     *object;
-  const char *ptr;
+  json_t     *root;
 
   doc          = calloc(1, sizeof(*doc));
   doc->memroot = calloc(1, JSON_MEM_PAGE);
-  ptr          = contents;
-  doc->ptr = ptr;
-  object       = json_calloc(doc, sizeof(json_t));
-  object       = json_child(doc, NULL, false);
+  doc->ptr     = contents;
+  root         = json_child(doc, NULL, false);
 
-  return object;
+  return root;
 }
 
 json_t*
