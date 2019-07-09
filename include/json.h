@@ -30,8 +30,9 @@ typedef struct json_array_t {
 } json_array_t;
 
 typedef struct json_doc_t {
-  void   *memroot;
-  json_t *root;
+  void       *memroot;
+  json_t     *root;
+  const char *ptr;
 } json_doc_t;
 
 json_t*

@@ -57,7 +57,7 @@ json_calloc(json_doc_t * __restrict doc, size_t size) {
   data       = &mem->data[mem->size];
   mem->size += size;
   
-  memset(mem, '\0', size);
+  memset(data, '\0', size);
   
   return data;
 }
