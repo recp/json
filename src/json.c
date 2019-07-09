@@ -115,14 +115,12 @@ json_child(json_doc_t  * __restrict doc,
         json_t *object, *child;
         object = json_calloc(doc, sizeof(json_t));
 
-        if (!parent) {
-          root = object;
-        } else {
+        root = object;
+
+        if (parent) {
           object->prev  = parent;
           object->next  = parent->child;
           parent->child = object;
-
-          root = object;
         }
 
         ++doc->ptr;
