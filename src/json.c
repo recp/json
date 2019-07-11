@@ -13,8 +13,8 @@
 #include <assert.h>
 
 JSON_INLINE
-const char*
-json_key(const char ** __restrict ptr, size_t * __restrict keysize) {
+const void*
+json_key(const char ** __restrict ptr, int * __restrict keysize) {
   const char *pi, *end, *start;
   char        c;
 
@@ -34,14 +34,14 @@ json_key(const char ** __restrict ptr, size_t * __restrict keysize) {
     c = *++pi;
   }
 
-  *keysize = end - start;
+  *keysize = (int)(end - start);
 
   *ptr = pi;
   return start;
 }
 
 JSON_INLINE
-const char*
+const void*
 json_value(const char ** __restrict ptr, size_t * restrict valuesize) {
   const char *pi, *end, *start;
   char        c;
@@ -82,7 +82,7 @@ json_child(json_doc_t  * __restrict doc,
            bool                     isvalue) {
   json_t     *root, *child;
   const char *key;
-  size_t      keysize;
+  int         keysize;
   char        c;
 
   if (!doc->ptr || (c = *doc->ptr) == '\0')
@@ -113,15 +113,17 @@ json_child(json_doc_t  * __restrict doc,
     switch (c) {
       case '{': {
         json_t *object, *child;
-        object = json_calloc(doc, sizeof(json_t));
-
+        object       = json_calloc(doc, sizeof(json_t));
+        
         root = object;
 
         if (parent) {
           object->prev  = parent;
           object->next  = parent->child;
           parent->child = object;
-        }
+        }  else {
+          object->type = JSON_OBJECT;
+         }
 
         ++doc->ptr;
         if ((child = json_child(doc, object, false))) {
@@ -145,7 +147,7 @@ json_child(json_doc_t  * __restrict doc,
     if (isvalue) {
       parent->value = json_value(&doc->ptr, &parent->valSize);
       isvalue       = false;
-
+      parent->type  = JSON_STRING;
       return NULL;
     }
 
@@ -157,6 +159,7 @@ json_child(json_doc_t  * __restrict doc,
     child          = json_calloc(doc, sizeof(json_t));
     child->key     = key;
     child->keySize = keysize;
+    child->type    = JSON_OBJECT;
 
     if (parent) {
       child->prev   = parent;
@@ -184,7 +187,10 @@ json_child(json_doc_t  * __restrict doc,
     } while (true);
 
   val:
-    child->child = json_child(doc, child, true);
+    if ((child->child = json_child(doc, child, true))) {
+      // if (child->type == JSON_UNKOWN)
+        // child->type = JSON_OBJECT;
+    }
   } while ((c = *doc->ptr) != '\0' && (c = *++doc->ptr) != '\0');
 
 ret:

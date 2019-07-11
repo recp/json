@@ -10,23 +10,30 @@
 
 #include "common.h"
 
+typedef enum json_type_t {
+  JSON_UNKOWN = 0,
+  JSON_OBJECT = 1,
+  JSON_ARRAY  = 2,
+  JSON_STRING = 3,
+  JSON_NUMBER = 4,
+  JSON_BOOL   = 5
+} json_type_t;
+
 typedef struct json_t {
   struct json_t *prev;
   struct json_t *next;
   struct json_t *child;
   const char    *key;
-  const char    *value;
-  size_t         keySize;
+  const void    *value;
   size_t         valSize;
-  bool           is_array:1;
-  bool           is_string:1;
-  bool           is_number:1;
+  int            keySize;
+  json_type_t    type;
 } json_t;
 
 typedef struct json_array_t {
   json_t   base;
-  json_t **items;
   size_t   count;
+  json_t **items;
 } json_array_t;
 
 typedef struct json_doc_t {
