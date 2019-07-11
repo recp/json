@@ -25,14 +25,14 @@ typedef struct json_t {
   struct json_t *child;
   const char    *key;
   const void    *value;
-  size_t         valSize;
+  int            valSize;
   int            keySize;
   json_type_t    type;
 } json_t;
 
 typedef struct json_array_t {
   json_t   base;
-  size_t   count;
+  int      count;
   json_t **items;
 } json_array_t;
 
