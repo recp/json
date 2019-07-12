@@ -42,7 +42,7 @@ json_key(const char ** __restrict ptr, int * __restrict keysize) {
 
 JSON_INLINE
 const void*
-json_value(const char ** __restrict ptr, size_t * restrict valuesize) {
+json_value(const char ** __restrict ptr, int * restrict valuesize) {
   const char *pi, *end, *start;
   char        c;
 
@@ -69,7 +69,7 @@ json_value(const char ** __restrict ptr, size_t * restrict valuesize) {
     c = *++pi;
   }
 
-  *valuesize = end - start;
+  *valuesize = (int)(end - start);
 
   *ptr = pi;
 
