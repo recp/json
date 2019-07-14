@@ -42,7 +42,7 @@ typedef struct json_doc_t {
   const char *ptr;
 } json_doc_t;
 
-json_t*
+json_doc_t*
 json_parse(const char * __restrict contents);
 
 json_t*

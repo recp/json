@@ -48,7 +48,6 @@ json_value(const char ** __restrict ptr, int * restrict valuesize) {
 
   pi  = *ptr;
   c   = *pi;
-  end = pi;
 
   while (c == ':' || c == '\"' || c == '\"' || c == ' ') {
     c = *++pi;
@@ -84,7 +83,7 @@ json_child(json_doc_t  * __restrict doc,
   const char *key;
   int         keysize;
   char        c;
-  bool        lookingForKey;
+  bool        lookingForKey, objIsStarted;
 
   if (!doc->ptr || (c = *doc->ptr) == '\0')
     return;
@@ -93,6 +92,7 @@ json_child(json_doc_t  * __restrict doc,
   obj            = parent;
   keysize        = 0;
   lookingForKey  = false;
+  objIsStarted   = false;
 
   do {
   again:
@@ -103,7 +103,7 @@ json_child(json_doc_t  * __restrict doc,
       case '\r':
       case '\n':
       case '\t':
-        c = *++doc->ptr;
+        ++doc->ptr;
         continue;
       case '{':
       case '[': {
@@ -129,14 +129,17 @@ json_child(json_doc_t  * __restrict doc,
           key          = NULL;
         }
 
-        c = *++doc->ptr;
+        objIsStarted = true;
         break;
       }
       case '}':
       case ']':
-        c   = *++doc->ptr;
+        if (!objIsStarted)
+          goto err;
+
         /* switch parent back */
-        obj = parent->prev;
+        obj          = parent;
+        objIsStarted = false;
         break;
       case ',': {
         lookingForKey = true;
@@ -203,7 +206,7 @@ ret:
   return ;
 }
 
-json_t*
+json_doc_t*
 json_parse(const char * __restrict contents) {
   json_doc_t *doc;
   json_t      tmproot;
@@ -211,6 +214,7 @@ json_parse(const char * __restrict contents) {
   doc           = calloc(1, sizeof(*doc));
   doc->memroot  = calloc(1, JSON_MEM_PAGE);
   doc->ptr      = contents;
+  tmproot.prev  = NULL;
   tmproot.child = NULL;
 
   json_child(doc, &tmproot);
@@ -219,7 +223,8 @@ json_parse(const char * __restrict contents) {
     tmproot.child->prev = NULL;
   }
 
-  return tmproot.child;
+  doc->root = tmproot.child;
+  return doc;
 }
 
 json_t*
@@ -228,8 +233,7 @@ json_get(json_t * __restrict object, const char * __restrict key) {
   
   if (!object)
     return NULL;
-    
-  iter = object->child;
+
   if (!(iter = object->child))
     return NULL;
   
