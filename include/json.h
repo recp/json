@@ -23,7 +23,7 @@ typedef struct json_t {
   const struct json_t *prev;
   const struct json_t *next;
   const char          *key;
-  const void          *value;
+  const struct json_t *value;
   int                  valSize;
   int                  keySize;
   json_type_t          type;

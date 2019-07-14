@@ -43,12 +43,26 @@ json_print_pad(const json_t * __restrict json, int pad) {
 
       case JSON_STRING:
         value = alloca(json->valSize);
-        snprintf(value, json->valSize + 1, "%s", json->value);
+        snprintf(value, json->valSize + 1, "%s", (const char *)json->value);
 
         printf("\"%s\"", value);
 
         if (json->next)
           printf(",");
+        printf("\n");
+        break;
+
+      case JSON_ARRAY:
+        printf("[\n");
+        json_print_pad(json->value, pad + 1);
+
+        for (i = 0; i < pad; i++)
+          printf("\t");
+        printf("]");
+
+        if (json->next)
+          printf(",");
+
         printf("\n");
         break;
       default:

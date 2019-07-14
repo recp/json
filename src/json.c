@@ -79,7 +79,7 @@ json_value(const char ** __restrict ptr, int * restrict valuesize) {
 void
 json_child(json_doc_t  * __restrict doc,
            json_t      * __restrict parent) {
-  json_t     *obj;
+  json_t     *obj, *val, *lastval;
   const char *key;
   int         keysize;
   char        c;
@@ -88,6 +88,7 @@ json_child(json_doc_t  * __restrict doc,
   if (!doc->ptr || (c = *doc->ptr) == '\0')
     return;
 
+  lastval        = NULL;
   key            = NULL;
   obj            = parent;
   keysize        = 0;
@@ -103,7 +104,8 @@ json_child(json_doc_t  * __restrict doc,
       case '\r':
       case '\n':
       case '\t':
-        ++doc->ptr;
+      case '\'':
+      case '"':
         continue;
       case '{':
       case '[': {
@@ -129,6 +131,7 @@ json_child(json_doc_t  * __restrict doc,
           key          = NULL;
         }
 
+        lastval      = NULL;
         objIsStarted = true;
         break;
       }
@@ -142,7 +145,8 @@ json_child(json_doc_t  * __restrict doc,
         objIsStarted = false;
         break;
       case ',': {
-        lookingForKey = true;
+        lookingForKey = obj->type == JSON_OBJECT;
+        continue;
       }
       default: {
         /* looking for key */
@@ -151,6 +155,7 @@ json_child(json_doc_t  * __restrict doc,
           if (key == NULL || ((c = *key) == '\0'))
             goto err;
           lookingForKey = false;
+          lastval = NULL;
 
           c = *doc->ptr;
 
@@ -177,14 +182,19 @@ json_child(json_doc_t  * __restrict doc,
 
         /* looking for value */
         else {
-          json_t *val;
           val       = json_calloc(doc, sizeof(json_t));
           val->type = JSON_STRING;
 
-          /* parent must not be NULL */
-          val->prev  = obj;
-          val->next  = obj->value;
-          obj->value = val;
+          /* for arrays */
+          if (!lastval) {
+            val->prev  = obj;
+            obj->value = val;
+          } else {
+            lastval->next = val;
+            val->prev     = lastval;
+          }
+
+          lastval = val;
 
           if (key) {
             val->key     = key;
