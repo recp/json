@@ -120,8 +120,8 @@ json_child(json_doc_t  * __restrict doc,
 
         /* parent must not be NULL */
         obj->prev     = parent;
-        obj->next     = parent->child;
-        parent->child = obj;
+        obj->next     = parent->value;
+        parent->value = obj;
 
         if (key) {
           obj->key     = key;
@@ -183,8 +183,8 @@ json_child(json_doc_t  * __restrict doc,
 
           /* parent must not be NULL */
           val->prev  = obj;
-          val->next  = obj->child;
-          obj->child = val;
+          val->next  = obj->value;
+          obj->value = val;
 
           if (key) {
             val->key     = key;
@@ -215,15 +215,15 @@ json_parse(const char * __restrict contents) {
   doc->memroot  = calloc(1, JSON_MEM_PAGE);
   doc->ptr      = contents;
   tmproot.prev  = NULL;
-  tmproot.child = NULL;
+  tmproot.value = NULL;
 
   json_child(doc, &tmproot);
 
-  if (tmproot.child) {
-    tmproot.child->prev = NULL;
+  if (tmproot.value) {
+    ((json_t *)tmproot.value)->prev = NULL;
   }
 
-  doc->root = tmproot.child;
+  doc->root = tmproot.value;
   return doc;
 }
 
@@ -233,15 +233,15 @@ json_free(json_doc_t * __restrict jsondoc) {
   free(jsondoc);
 }
 
-json_t*
-json_get(json_t * __restrict object, const char * __restrict key) {
-  json_t *iter;
-  int     keysize;
-  
+const json_t*
+json_get(const json_t * __restrict object, const char * __restrict key) {
+  const json_t *iter;
+  int           keysize;
+
   if (!object)
     return NULL;
 
-  if (!(iter = object->child))
+  if (!(iter = object->value))
     return NULL;
 
   keysize = (int)strlen(key);
@@ -252,6 +252,8 @@ json_get(json_t * __restrict object, const char * __restrict key) {
 }
 
 void
-json_set(json_t * __restrict object, const char * __restrict key) {
+json_set(json_t     * __restrict object,
+         const char * __restrict key,
+         void       * __restrict value) {
   
 }

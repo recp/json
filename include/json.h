@@ -20,14 +20,13 @@ typedef enum json_type_t {
 } json_type_t;
 
 typedef struct json_t {
-  struct json_t *prev;
-  struct json_t *next;
-  struct json_t *child;
-  const char    *key;
-  const void    *value;
-  int            valSize;
-  int            keySize;
-  json_type_t    type;
+  const struct json_t *prev;
+  const struct json_t *next;
+  const char          *key;
+  const void          *value;
+  int                  valSize;
+  int                  keySize;
+  json_type_t          type;
 } json_t;
 
 typedef struct json_array_t {
@@ -37,9 +36,9 @@ typedef struct json_array_t {
 } json_array_t;
 
 typedef struct json_doc_t {
-  void       *memroot;
-  json_t     *root;
-  const char *ptr;
+  void         *memroot;
+  const json_t *root;
+  const char   *ptr;
 } json_doc_t;
 
 json_doc_t*
@@ -48,11 +47,13 @@ json_parse(const char * __restrict contents);
 void
 json_free(json_doc_t * __restrict jsondoc);
 
-json_t*
-json_get(json_t * __restrict object, const char * __restrict key);
+const json_t*
+json_get(const json_t * __restrict object, const char * __restrict key);
 
 void
-json_set(json_t * __restrict object, const char * __restrict key);
+json_set(json_t     * __restrict object,
+         const char * __restrict key,
+         void       * __restrict value);
 
 json_array_t*
 json_array(json_t * __restrict object);

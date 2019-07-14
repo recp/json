@@ -13,7 +13,7 @@
 
 JSON_INLINE
 void
-json_print_pad(json_t *json, int pad) {
+json_print_pad(const json_t * __restrict json, int pad) {
   char *key, *value;
   int   i;
 
@@ -29,7 +29,7 @@ json_print_pad(json_t *json, int pad) {
     switch (json->type) {
       case JSON_OBJECT:
         printf("{\n");
-        json_print_pad(json->child, pad + 1);
+        json_print_pad(json->value, pad + 1);
 
         for (i = 0; i < pad; i++)
           printf("\t");
@@ -63,7 +63,7 @@ json_print_pad(json_t *json, int pad) {
 
 JSON_INLINE
 void
-json_print(json_t *json) {
+json_print(const json_t * __restrict json) {
   printf("json ( %p ):\n", json);
   json_print_pad(json, 0);
   printf("\n");
