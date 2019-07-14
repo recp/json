@@ -45,6 +45,9 @@ typedef struct json_doc_t {
 json_doc_t*
 json_parse(const char * __restrict contents);
 
+void
+json_free(json_doc_t * __restrict jsondoc);
+
 json_t*
 json_get(json_t * __restrict object, const char * __restrict key);
 

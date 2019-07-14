@@ -227,6 +227,12 @@ json_parse(const char * __restrict contents) {
   return doc;
 }
 
+void
+json_free(json_doc_t * __restrict jsondoc) {
+  free(jsondoc->memroot);
+  free(jsondoc);
+}
+
 json_t*
 json_get(json_t * __restrict object, const char * __restrict key) {
   json_t *iter;
