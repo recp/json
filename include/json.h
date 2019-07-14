@@ -11,12 +11,17 @@
 #include "common.h"
 
 typedef enum json_type_t {
-  JSON_UNKOWN = 0,
-  JSON_OBJECT = 1,
-  JSON_ARRAY  = 2,
-  JSON_STRING = 3,
-  JSON_NUMBER = 4,
-  JSON_BOOL   = 5
+  JSON_UNKOWN  = 0,
+  JSON_OBJECT  = 1,
+  JSON_ARRAY   = 2,
+  JSON_STRING  = 3,
+
+  JSON_BOOL    = 5,
+  JSON_NUMBER  = 4,
+
+  JSON_INTEGER = 6,
+  JSON_FLOAT   = 7,
+  JSON_NULL    = 8
 } json_type_t;
 
 typedef struct json_t {

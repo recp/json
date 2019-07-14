@@ -248,14 +248,11 @@ json_get(const json_t * __restrict object, const char * __restrict key) {
   const json_t *iter;
   int           keysize;
 
-  if (!object)
-    return NULL;
-
-  if (!(iter = object->value))
+  if (!object || !key || !(iter = object->value))
     return NULL;
 
   keysize = (int)strlen(key);
-  while (strncmp(iter->key, key, keysize) != 0)
+  while (iter && strncmp(iter->key, key, keysize) != 0)
     iter = iter->next;
   
   return iter;
