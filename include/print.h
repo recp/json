@@ -11,18 +11,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+JSON_INLINE
 void
-print_json_pad(json_t *json, int pad) {
+json_print_pad(json_t *json, int pad) {
   char *key, *value;
   int   i;
 
   while (json) {
     for (i = 0; i < pad; i++)
       printf("\t");
+
+    if (json->key) {
+      key = alloca(json->keySize);
+      snprintf(key, json->keySize + 1, "%s", json->key);
+      printf("\"%s\": ", key);
+    }
     switch (json->type) {
       case JSON_OBJECT:
         printf("{\n");
-        print_json_pad(json->child, pad + 1);
+        json_print_pad(json->child, pad + 1);
 
         for (i = 0; i < pad; i++)
           printf("\t");
@@ -35,13 +42,10 @@ print_json_pad(json_t *json, int pad) {
         break;
 
       case JSON_STRING:
-        key   = alloca(json->keySize);
         value = alloca(json->valSize);
-
-        snprintf(key,   json->keySize + 1, "%s", json->key);
         snprintf(value, json->valSize + 1, "%s", json->value);
 
-        printf("\"%s\": \"%s\"", key, value);
+        printf("\"%s\"", value);
 
         if (json->next)
           printf(",");
@@ -57,10 +61,11 @@ print_json_pad(json_t *json, int pad) {
   }
 }
 
+JSON_INLINE
 void
-print_json(json_t *json) {
+json_print(json_t *json) {
   printf("json ( %p ):\n", json);
-  print_json_pad(json, 0);
+  json_print_pad(json, 0);
   printf("\n");
 }
 
