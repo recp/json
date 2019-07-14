@@ -54,7 +54,7 @@ json_value(const char ** __restrict ptr, int * restrict valuesize) {
     c = *++pi;
   }
 
-  start = pi;
+  start = end = pi;
   
   while (c != '\"'
          && c != '\''
@@ -90,7 +90,7 @@ json_child(json_doc_t  * __restrict doc,
     return;
 
   key            = NULL;
-  obj            = NULL;
+  obj            = parent;
   keysize        = 0;
   lookingForKey  = false;
 
@@ -107,7 +107,9 @@ json_child(json_doc_t  * __restrict doc,
         continue;
       case '{':
       case '[': {
-        obj = json_calloc(doc, sizeof(json_t));
+        /* switch parent */
+        parent = obj;
+        obj    = json_calloc(doc, sizeof(json_t));
 
         if (c == '{') {
           obj->type     = JSON_OBJECT;
@@ -133,7 +135,8 @@ json_child(json_doc_t  * __restrict doc,
       case '}':
       case ']':
         c   = *++doc->ptr;
-        obj = NULL;
+        /* switch parent back */
+        obj = parent->prev;
         break;
       case ',': {
         lookingForKey = true;
@@ -145,7 +148,9 @@ json_child(json_doc_t  * __restrict doc,
           if (key == NULL || ((c = *key) == '\0'))
             goto err;
           lookingForKey = false;
-          
+
+          c = *doc->ptr;
+
           /* jump to value */
           do {
             switch (c) {
@@ -169,7 +174,6 @@ json_child(json_doc_t  * __restrict doc,
 
         /* looking for value */
         else {
-          printf("looking for value\n");
           json_t *val;
           val       = json_calloc(doc, sizeof(json_t));
           val->type = JSON_STRING;
