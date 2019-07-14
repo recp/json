@@ -236,14 +236,16 @@ json_free(json_doc_t * __restrict jsondoc) {
 json_t*
 json_get(json_t * __restrict object, const char * __restrict key) {
   json_t *iter;
+  int     keysize;
   
   if (!object)
     return NULL;
 
   if (!(iter = object->child))
     return NULL;
-  
-  while (strcmp(iter->key, key) == 0)
+
+  keysize = (int)strlen(key);
+  while (strncmp(iter->key, key, keysize) != 0)
     iter = iter->next;
   
   return iter;
