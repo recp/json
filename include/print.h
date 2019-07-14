@@ -9,6 +9,7 @@
 
 #include "common.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 void
 print_json(json_t *json) {

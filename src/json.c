@@ -98,21 +98,6 @@ json_child(json_doc_t  * __restrict doc,
   again:
     /* child */
     switch (c) {
-<<<<<<< Updated upstream
-      case '{': {
-        json_t *object, *child;
-        object       = json_calloc(doc, sizeof(json_t));
-        
-        root = object;
-
-        if (parent) {
-          object->prev  = parent;
-          object->next  = parent->child;
-          parent->child = object;
-        }  else {
-          object->type = JSON_OBJECT;
-         }
-=======
       /* trim */
       case ' ':
       case '\r':
@@ -130,7 +115,6 @@ json_child(json_doc_t  * __restrict doc,
         } else {
           obj->type = JSON_ARRAY;
         }
->>>>>>> Stashed changes
 
         /* parent must not be NULL */
         obj->prev     = parent;
@@ -147,58 +131,12 @@ json_child(json_doc_t  * __restrict doc,
         break;
       }
       case '}':
-<<<<<<< Updated upstream
-        goto ret;
-    }
-
-    /* primitive value */
-    if (isvalue) {
-      parent->value = json_value(&doc->ptr, &parent->valSize);
-      isvalue       = false;
-      parent->type  = JSON_STRING;
-      return NULL;
-    }
-
-    key = json_key(&doc->ptr, &keysize);
-    if (key == NULL || *key == '\0')
-      break;
-
-    /* child properties */
-    child          = json_calloc(doc, sizeof(json_t));
-    child->key     = key;
-    child->keySize = keysize;
-    child->type    = JSON_OBJECT;
-
-    if (parent) {
-      child->prev   = parent;
-      child->next   = parent->child;
-      parent->child = child;
-    }
-
-    c = *doc->ptr;
-
-    /* jump to value */
-    do {
-      switch (c) {
-        case ' ':
-        case '"':
-        case '\'':
-        case '\t':
-        case '\n':
-        case '\r':
-        case ':':
-          c = *++doc->ptr;
-          continue;
-        default:
-          goto val;
-=======
       case ']':
         c   = *++doc->ptr;
         obj = NULL;
         break;
       case ',': {
         lookingForKey = true;
->>>>>>> Stashed changes
       }
       default: {
         /* looking for key */
@@ -229,12 +167,6 @@ json_child(json_doc_t  * __restrict doc,
           goto again;
         }
 
-<<<<<<< Updated upstream
-  val:
-    if ((child->child = json_child(doc, child, true))) {
-      // if (child->type == JSON_UNKOWN)
-        // child->type = JSON_OBJECT;
-=======
         /* looking for value */
         else {
           printf("looking for value\n");
@@ -259,7 +191,6 @@ json_child(json_doc_t  * __restrict doc,
 
         } /* if lookingForKey */
       } /* switch->default */
->>>>>>> Stashed changes
     }
   } while ((c = *doc->ptr) != '\0' && (c = *++doc->ptr) != '\0');
 
