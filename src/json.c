@@ -250,10 +250,3 @@ json_get(const json_t * __restrict object, const char * __restrict key) {
   
   return iter;
 }
-
-void
-json_set(json_t     * __restrict object,
-         const char * __restrict key,
-         void       * __restrict value) {
-  
-}
