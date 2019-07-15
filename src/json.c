@@ -45,7 +45,7 @@ json_value(const char ** __restrict ptr, int * restrict valuesize) {
   pi  = *ptr;
   c   = *pi;
 
-  while (c == ':' || c == '\"' || c == '\"' || c == ' ') {
+  while (c == ':' || c == '\"' || c == '\'' || c == ' ') {
     c = *++pi;
   }
 
@@ -242,12 +242,12 @@ json_free(json_doc_t * __restrict jsondoc) {
 const json_t*
 json_get(const json_t * __restrict object, const char * __restrict key) {
   const json_t *iter;
-  int           keysize;
+  size_t        keysize;
 
   if (!object || !key || !(iter = object->value))
     return NULL;
 
-  keysize = (int)strlen(key);
+  keysize = strlen(key);
   while (iter && strncmp(iter->key, key, keysize) != 0)
     iter = iter->next;
   
