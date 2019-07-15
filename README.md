@@ -1,5 +1,6 @@
 # 🔋 JSON parser for `C`
 [![Build Status](https://travis-ci.org/recp/json.svg?branch=master)](https://travis-ci.org/recp/json)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/5c5ff7a0b2834889b7a83f7856112133)](https://www.codacy.com/app/recp/json?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=recp/json&amp;utm_campaign=Badge_Grade)
 
 This is very simple and very powerful JSON parser. It creates DOM-like data structure and allows to iterate and process JSON objects very simple way.
 It does not alloc any memory for JSON itself, it only allocs memory for tokens. It also does not use recursive way to build data structure which makes it very fast to build DOM-like tree structure.
