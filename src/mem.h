@@ -8,7 +8,7 @@
 #ifndef json_mem_h
 #define json_mem_h
 
-#include "../include/common.h"
+#include "../include/json/common.h"
 #include <stdlib.h>
 #include <string.h>
 

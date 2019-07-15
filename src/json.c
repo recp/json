@@ -5,10 +5,8 @@
  * Full license can be found in the LICENSE file
  */
 
-#include "../include/json.h"
+#include "../include/json/json.h"
 #include "mem.h"
-#include <stdlib.h>
-#include <string.h>
 
 JSON_INLINE
 const void*
@@ -210,8 +208,7 @@ json_child(json_doc_t * __restrict doc,
   } while ((c = *doc->ptr) != '\0' && (c = *++doc->ptr) != '\0');
 
 err:
-ret:
-  return ;
+  return;
 }
 
 json_doc_t*

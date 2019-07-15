@@ -1,0 +1,29 @@
+#******************************************************************************
+# Copyright (c), Recep Aslantas.                                              *
+#                                                                             *
+# MIT License (MIT), http://opensource.org/licenses/MIT                       *
+# Full license can be found in the LICENSE file                               *
+#                                                                             *
+#******************************************************************************
+
+ACLOCAL_AMFLAGS = -I m4
+
+AM_CFLAGS = -Wall \
+            -std=gnu99 \
+            -O3 \
+            -Wstrict-aliasing=2 \
+            -fstrict-aliasing \
+            -pedantic
+
+lib_LTLIBRARIES = libjson.la
+libjson_la_LDFLAGS = -no-undefined -version-info 0:1:0
+
+jsondir=$(includedir)/json
+json_HEADERS = include/json/version.h \
+               include/json/common.h \
+               include/json/json.h \
+               include/json/util.h \
+               include/json/print.h
+
+libjson_la_SOURCES=\
+    src/json.c
