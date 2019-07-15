@@ -80,7 +80,7 @@ json_child(json_doc_t * __restrict doc,
   const char *key;
   int         keysize;
   char        c;
-  bool        lookingForKey, objIsStarted;
+  bool        lookingForKey;
 
   if (!doc->ptr || (c = *doc->ptr) == '\0')
     return;
@@ -90,7 +90,6 @@ json_child(json_doc_t * __restrict doc,
   obj            = parent;
   keysize        = 0;
   lookingForKey  = false;
-  objIsStarted   = false;
 
   do {
   again:
@@ -129,21 +128,20 @@ json_child(json_doc_t * __restrict doc,
         }
 
         /*0 lastval      = NULL; */
-        objIsStarted = true;
         break;
       }
       case '}':
       case ']':
-        if (!objIsStarted)
-          goto err;
-
         /* switch parent back */
-        obj          = parent;
-        objIsStarted = false;
+
+        obj           = parent;
+        parent        = parent->prev;
+        lookingForKey = obj->type == JSON_OBJECT;
+
         break;
       case ',': {
         lookingForKey = obj->type == JSON_OBJECT;
-        continue;
+        break;
       }
       default: {
         /* looking for key */
@@ -172,7 +170,7 @@ json_child(json_doc_t * __restrict doc,
                 goto val;
             }
           }
-          
+
         val:
           goto again;
         }
