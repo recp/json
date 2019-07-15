@@ -14,6 +14,7 @@ It does not alloc any memory for JSON itself, it only allocs memory for tokens. 
 -  very small library
 
 ## TODOs
+- [ ]  ignore comments?
 - [ ]  provide header only library and optionally compile version
 - [ ]  provide option to preserve array order (currently array order is reversed, because it is easy to parse it in this way; this may be changed. Please follow new commits or releases)
 - [ ]  windows build
