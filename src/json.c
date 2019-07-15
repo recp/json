@@ -76,7 +76,7 @@ JSON_INLINE
 void
 json_child(json_doc_t * __restrict doc,
            json_t     * __restrict parent) {
-  json_t     *obj, *val, *lastval;
+  json_t     *obj, *val; /*, *lastval; */
   const char *key;
   int         keysize;
   char        c;
@@ -85,7 +85,7 @@ json_child(json_doc_t * __restrict doc,
   if (!doc->ptr || (c = *doc->ptr) == '\0')
     return;
 
-  lastval        = NULL;
+  /* lastval        = NULL; */
   key            = NULL;
   obj            = parent;
   keysize        = 0;
@@ -128,7 +128,7 @@ json_child(json_doc_t * __restrict doc,
           key          = NULL;
         }
 
-        lastval      = NULL;
+        /*0 lastval      = NULL; */
         objIsStarted = true;
         break;
       }
@@ -152,7 +152,7 @@ json_child(json_doc_t * __restrict doc,
           if (key == NULL || ((c = *key) == '\0'))
             goto err;
           lookingForKey = false;
-          lastval = NULL;
+         /* lastval = NULL; */
 
           c = *doc->ptr;
 
@@ -182,7 +182,8 @@ json_child(json_doc_t * __restrict doc,
           val       = json_calloc(doc, sizeof(json_t));
           val->type = JSON_STRING;
 
-          /* for arrays */
+          /*
+          // for arrays
           if (!lastval) {
             val->prev  = obj;
             obj->value = val;
@@ -190,8 +191,14 @@ json_child(json_doc_t * __restrict doc,
             lastval->next = val;
             val->prev     = lastval;
           }
+          */
 
-          lastval = val;
+          /* parent must not be NULL */
+          val->prev  = obj;
+          val->next  = obj->value;
+          obj->value = val;
+
+          /* lastval = val; */
 
           if (key) {
             val->key     = key;
