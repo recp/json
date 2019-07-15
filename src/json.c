@@ -104,14 +104,18 @@ json_child(json_doc_t * __restrict doc,
         continue;
       case '{':
       case '[': {
+        if (obj->type == JSON_ARRAY)
+          ++((json_array_t *)obj)->count;
+
         /* switch parent */
         parent = obj;
-        obj    = json_calloc(doc, sizeof(json_t));
 
         if (c == '{') {
+          obj           = json_calloc(doc, sizeof(json_t));
           obj->type     = JSON_OBJECT;
           lookingForKey = true;
         } else {
+          obj       = json_calloc(doc, sizeof(json_array_t));
           obj->type = JSON_ARRAY;
         }
 
@@ -176,6 +180,9 @@ json_child(json_doc_t * __restrict doc,
         else {
           val       = json_calloc(doc, sizeof(json_t));
           val->type = JSON_STRING;
+
+          if (obj->type == JSON_ARRAY)
+            ++((json_array_t *)obj)->count;
 
           /* parent must not be NULL */
           val->prev  = obj;

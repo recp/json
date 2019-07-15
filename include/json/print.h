@@ -61,7 +61,7 @@ json_print_pad(const json_t * __restrict json, int pad) {
         break;
 
       case JSON_ARRAY:
-        printf("[\n");
+        printf("(%d) [\n", ((json_array_t *)json)->count);
         json_print_pad(json->value, pad + 1);
 
         for (i = 0; i < pad; i++)
