@@ -9,8 +9,6 @@
 #include "mem.h"
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
-#include <assert.h>
 
 JSON_INLINE
 const void*
@@ -77,8 +75,8 @@ json_value(const char ** __restrict ptr, int * restrict valuesize) {
 }
 
 void
-json_child(json_doc_t  * __restrict doc,
-           json_t      * __restrict parent) {
+json_child(json_doc_t * __restrict doc,
+           json_t     * __restrict parent) {
   json_t     *obj, *val, *lastval;
   const char *key;
   int         keysize;
@@ -224,6 +222,7 @@ json_parse(const char * __restrict contents) {
   doc           = calloc(1, sizeof(*doc));
   doc->memroot  = calloc(1, JSON_MEM_PAGE);
   doc->ptr      = contents;
+  tmproot.type  = JSON_OBJECT;
   tmproot.prev  = NULL;
   tmproot.value = NULL;
 

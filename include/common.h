@@ -26,4 +26,41 @@
 #  define JSON_INLINE static inline __attribute((always_inline))
 #endif
 
+typedef enum json_type_t {
+  JSON_UNKOWN  = 0,
+  JSON_OBJECT  = 1,
+  JSON_ARRAY   = 2,
+  JSON_STRING  = 3,
+
+  /*
+  JSON_BOOL    = 5,
+  JSON_NUMBER  = 4,
+
+  JSON_INTEGER = 6,
+  JSON_FLOAT   = 7,
+  JSON_NULL    = 8
+   */
+} json_type_t;
+
+typedef struct json_t {
+  const struct json_t *prev;
+  const struct json_t *next;
+  const char          *key;
+  const void          *value;
+  int                  valSize;
+  int                  keySize;
+  json_type_t          type;
+} json_t;
+
+typedef struct json_array_t {
+  json_t base;
+  int    count;
+} json_array_t;
+
+typedef struct json_doc_t {
+  void         *memroot;
+  const json_t *root;
+  const char   *ptr;
+} json_doc_t;
+
 #endif /* json_common_h */

@@ -9,9 +9,16 @@
 #define json_print_h
 
 #include "common.h"
+#include "json.h"
 #include "util.h"
 #include <stdio.h>
 
+/*!
+ * @brief print json
+ *
+ * @param[in] json json object
+ * @param[in] pad  padding
+ */
 JSON_INLINE
 void
 json_print_pad(const json_t * __restrict json, int pad) {
@@ -70,12 +77,15 @@ json_print_pad(const json_t * __restrict json, int pad) {
         break;
     }
 
-
-
     json = json->next;
   }
 }
 
+/*!
+ * @brief print json
+ *
+ * @param[in] json json object with title and zero padding
+ */
 JSON_INLINE
 void
 json_print(const json_t * __restrict json) {

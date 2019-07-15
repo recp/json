@@ -33,7 +33,7 @@ json_alloc(json_doc_t * __restrict doc, size_t size) {
     mem->next    = doc->memroot;
     doc->memroot = mem;
   }
-  
+
   data       = &mem->data[mem->size];
   mem->size += size;
   

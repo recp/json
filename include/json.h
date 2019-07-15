@@ -10,52 +10,67 @@
 
 #include "common.h"
 
-typedef enum json_type_t {
-  JSON_UNKOWN  = 0,
-  JSON_OBJECT  = 1,
-  JSON_ARRAY   = 2,
-  JSON_STRING  = 3,
-
-  JSON_BOOL    = 5,
-  JSON_NUMBER  = 4,
-
-  JSON_INTEGER = 6,
-  JSON_FLOAT   = 7,
-  JSON_NULL    = 8
-} json_type_t;
-
-typedef struct json_t {
-  const struct json_t *prev;
-  const struct json_t *next;
-  const char          *key;
-  const void          *value;
-  int                  valSize;
-  int                  keySize;
-  json_type_t          type;
-} json_t;
-
-typedef struct json_array_t {
-  json_t   base;
-  int      count;
-  json_t **items;
-} json_array_t;
-
-typedef struct json_doc_t {
-  void         *memroot;
-  const json_t *root;
-  const char   *ptr;
-} json_doc_t;
-
+/*!
+ * @brief parse json string
+ *
+ * this function parses JSON string and retuns a document which contains:
+ *   - JSON object
+ *   - allocated memory
+ * after JSON is processed, the object must be freed with json_free()
+ *
+ * this library doesn't alloc any memory for JSON itsef and doesn't copy JSON
+ * contents into a data structure. It only allocs memory for tokens.
+ * So don't free 'contents' parameter until you finished to process JSON.
+ *
+ * Desired order:
+ *  1. Read JSON file
+ *  2. Pass the contents to json_parse()
+ *  3. Process/Handle JSON
+ *  4. free JSON document with json_free()
+ *  5. free `contents`
+ *
+ * @param[in] contents JSON string
+ * @return json document which contains json object as root object
+ */
+JSON_EXPORT
 json_doc_t*
 json_parse(const char * __restrict contents);
 
+/*!
+ * @brief frees json document and its allocated memory
+ */
+JSON_EXPORT
 void
 json_free(json_doc_t * __restrict jsondoc);
 
+/*!
+ * @brief gets value for key
+ *
+ * You should only use this for DEBUG or if you only need to only specific key.
+ * Desired usage is iterative way:
+ *    You must iterate through json's next and value links.
+ *
+ * @param[in] object json object
+ * @param[in] key    key to find value
+ * @return value found for the key or NULL
+ */
+JSON_EXPORT
 const json_t*
 json_get(const json_t * __restrict object, const char * __restrict key);
 
-json_array_t*
-json_array(json_t * __restrict object);
+/*!
+ * @brief contenient function to cast object's child/value to array
+ *
+ * @param[in] object json object
+ * @return json array or NULL
+ */
+JSON_INLINE
+const json_array_t*
+json_array(json_t * __restrict object) {
+  if (object->type != JSON_ARRAY || !object->value)
+    return NULL;
+
+  return object->value;
+}
 
 #endif /* json_h */
