@@ -13,6 +13,10 @@ It does not alloc any memory for JSON itself, it only allocs memory for tokens. 
 -  provides some util functions to print json, get int32, int64, float, double...
 -  very small library
 
+## TODOs
+- [ ]  provide header only library and optionally compile version
+- [ ]  provide option to preserve array order (currently array order is reversed, because it is easy to parse it in this way; this may be changed. Please follow new commits or releases)
+
 ## Build
 
 ### Unix (Autotools)
