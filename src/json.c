@@ -24,7 +24,10 @@ json_key(const char ** __restrict ptr, int * __restrict keysize) {
   start = end = pi;
 
   while (c != ':' && c != '\"' && c != '\'' && c != '\0') {
-    if (c != ' ')
+    if (c != ' '
+        && c != '\r'
+        && c != '\n'
+        && c != '\t')
       end = pi + 1;
     
     c = *++pi;
@@ -59,7 +62,10 @@ json_value(const char ** __restrict ptr, int * restrict valuesize) {
          && c != '['
          && c != ']'
          && c != '\0') {
-    if (c != ' ')
+    if (c != ' '
+        && c != '\r'
+        && c != '\n'
+        && c != '\t')
       end = pi + 1;
     
     c = *++pi;
