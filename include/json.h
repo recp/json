@@ -28,7 +28,7 @@ typedef struct json_t {
   const struct json_t *prev;
   const struct json_t *next;
   const char          *key;
-  const struct json_t *value;
+  const void          *value;
   int                  valSize;
   int                  keySize;
   json_type_t          type;
@@ -57,20 +57,5 @@ json_get(const json_t * __restrict object, const char * __restrict key);
 
 json_array_t*
 json_array(json_t * __restrict object);
-
-int32_t
-json_int32(json_t * __restrict object);
-
-int64_t
-json_int64(json_t * __restrict object);
-
-float
-json_float(json_t * __restrict object);
-
-double
-json_double(json_t * __restrict object);
-
-const char*
-json_string(json_t * __restrict object);
 
 #endif /* json_h */

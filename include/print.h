@@ -9,8 +9,8 @@
 #define json_print_h
 
 #include "common.h"
+#include "util.h"
 #include <stdio.h>
-#include <stdlib.h>
 
 JSON_INLINE
 void
@@ -44,7 +44,7 @@ json_print_pad(const json_t * __restrict json, int pad) {
 
       case JSON_STRING:
         value = alloca(json->valSize);
-        snprintf(value, json->valSize + 1, "%s", (const char *)json->value);
+        snprintf(value, json->valSize + 1, "%s", json_string(json));
 
         printf("\"%s\"", value);
 

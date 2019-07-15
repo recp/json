@@ -160,7 +160,7 @@ json_child(json_doc_t  * __restrict doc,
           c = *doc->ptr;
 
           /* jump to value */
-          do {
+          for (;;) {
             switch (c) {
               case ' ':
               case '\t':
@@ -174,7 +174,7 @@ json_child(json_doc_t  * __restrict doc,
               default:
                 goto val;
             }
-          } while (true);
+          }
           
         val:
           goto again;
