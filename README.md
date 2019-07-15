@@ -21,6 +21,8 @@ It does not alloc any memory for JSON itself, it only allocs memory for tokens. 
 - [ ]  cmake?
 - [ ]  tests
 - [ ]  extra optimizations
+- [ ]  documentation
+- [ ]  usage in detail
 
 ## Build
 
@@ -50,17 +52,20 @@ todo.
 
 #### Example usage
 
+You can inspect `json_print()` to view usage in more detail. The example will be updated later to give more detail.
+
 ```C
 #include <json/json.h>
 #include <json/print.h>
 
 int main(int argc, const char * argv[]) {
   json_doc_t *doc;
+  json_t     *root;
   
-  doc = json_parse(/* JSON string */);
+  doc  = json_parse(/* JSON string */);
+  root = doc->root;
 
-  /* you can inspect json_print() to view usage in more detail */
-  json_print(doc->root);
+  json_print(root);
 
   json_free(doc);
 
