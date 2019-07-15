@@ -72,6 +72,7 @@ json_value(const char ** __restrict ptr, int * restrict valuesize) {
   return start;
 }
 
+JSON_INLINE
 void
 json_child(json_doc_t * __restrict doc,
            json_t     * __restrict parent) {
@@ -211,6 +212,7 @@ err:
   return;
 }
 
+JSON_EXPORT
 json_doc_t*
 json_parse(const char * __restrict contents) {
   json_doc_t *doc;
@@ -233,12 +235,14 @@ json_parse(const char * __restrict contents) {
   return doc;
 }
 
+JSON_EXPORT
 void
 json_free(json_doc_t * __restrict jsondoc) {
   free(jsondoc->memroot);
   free(jsondoc);
 }
 
+JSON_EXPORT
 const json_t*
 json_get(const json_t * __restrict object, const char * __restrict key) {
   const json_t *iter;

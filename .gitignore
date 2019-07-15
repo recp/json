@@ -119,3 +119,5 @@ docs/build/*
 win/x64
 win/x85
 win/Debug
+json_test/*
+main.c
