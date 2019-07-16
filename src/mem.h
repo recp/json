@@ -22,26 +22,6 @@ typedef struct json_mem_t {
 
 JSON_INLINE
 void*
-json_alloc(json_doc_t * __restrict doc, size_t size) {
-  void       *data;
-  json_mem_t *mem;
-  
-  mem = doc->memroot;
-  
-  if (mem->size > (JSON_MEM_PAGE - size)) {
-    mem          = calloc(1, JSON_MEM_PAGE);
-    mem->next    = doc->memroot;
-    doc->memroot = mem;
-  }
-
-  data       = &mem->data[mem->size];
-  mem->size += size;
-  
-  return data;
-}
-
-JSON_INLINE
-void*
 json_calloc(json_doc_t * __restrict doc, size_t size) {
   void       *data;
   json_mem_t *mem;
