@@ -114,7 +114,7 @@ json_parse(const char * __restrict contents) {
       case '\t':
       case '\'':
       case '"':
-        continue;
+        break;
       case '{':
       case '[': {
         if (obj->type == JSON_ARRAY)
@@ -216,7 +216,7 @@ json_parse(const char * __restrict contents) {
           goto again;
         } /* if lookingForKey */
       } /* switch->default */
-    }
+    } /* switch */
   } while ((c = *doc->ptr) != '\0' && (c = *++doc->ptr) != '\0');
 
 err:
