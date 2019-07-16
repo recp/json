@@ -17,9 +17,8 @@ json_key(const char ** __restrict ptr, int * __restrict keysize) {
   pi = *ptr;
   c  = *pi;
 
-  while (c == '\"' || c == '\'' || c == ' ' || c == ',') {
+  while (c == '\"' || c == '\'' || c == ' ' || c == ',')
     c = *++pi;
-  }
 
   start = end = pi;
 
@@ -34,8 +33,8 @@ json_key(const char ** __restrict ptr, int * __restrict keysize) {
   }
 
   *keysize = (int)(end - start);
+  *ptr     = pi;
 
-  *ptr = pi;
   return start;
 }
 
@@ -48,9 +47,8 @@ json_value(const char ** __restrict ptr, int * restrict valuesize) {
   pi  = *ptr;
   c   = *pi;
 
-  while (c == ':' || c == '\"' || c == '\'' || c == ' ') {
+  while (c == ':' || c == '\"' || c == '\'' || c == ' ')
     c = *++pi;
-  }
 
   start = end = pi;
   
@@ -72,8 +70,7 @@ json_value(const char ** __restrict ptr, int * restrict valuesize) {
   }
 
   *valuesize = (int)(end - start);
-
-  *ptr = pi;
+  *ptr       = pi;
 
   return start;
 }
