@@ -148,6 +148,8 @@ json_parse(const char * __restrict contents) {
       case '}':
       case ']':
         /* switch parent back */
+        if (!parent || !parent->prev)
+          goto err;
 
         obj           = parent;
         parent        = parent->prev;
