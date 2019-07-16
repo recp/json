@@ -231,6 +231,14 @@ err:
 JSON_EXPORT
 void
 json_free(json_doc_t * __restrict jsondoc) {
-  free(jsondoc->memroot);
+  json_mem_t *mem, *tofree;
+
+  mem = jsondoc->memroot;
+  while (mem) {
+    tofree = mem;
+    mem    = mem->next;
+    free(tofree);
+  }
+
   free(jsondoc);
 }
