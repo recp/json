@@ -30,7 +30,7 @@ json_print_pad(const json_t * __restrict json, int pad) {
       printf("\t");
 
     if (json->key) {
-      key = alloca(json->keySize);
+      key = alloca(json->keySize + 1);
       snprintf(key, json->keySize + 1, "%s", json->key);
       printf("\"%s\": ", key);
     }
@@ -50,7 +50,7 @@ json_print_pad(const json_t * __restrict json, int pad) {
         break;
 
       case JSON_STRING:
-        value = alloca(json->valSize);
+        value = alloca(json->valSize + 1);
         snprintf(value, json->valSize + 1, "%s", json_string(json));
 
         printf("\"%s\"", value);
