@@ -12,13 +12,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define JSON_MEM_PAGE 8192
+
 typedef struct json_mem_t {
   struct json_mem_t *next;
   size_t             size;
   char               data[];
 } json_mem_t;
 
-#define JSON_MEM_PAGE (sizeof(json_mem_t) + 4096)
 
 JSON_INLINE
 void*
@@ -36,8 +37,6 @@ json_calloc(json_doc_t * __restrict doc, size_t size) {
   
   data       = &mem->data[mem->size];
   mem->size += size;
-  
-  memset(data, '\0', size);
   
   return data;
 }
