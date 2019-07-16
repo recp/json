@@ -9,6 +9,8 @@
 #define json_h
 
 #include "common.h"
+#include <stdlib.h>
+#include <string.h>
 
 /*!
  * @brief parse json string
@@ -54,9 +56,21 @@ json_free(json_doc_t * __restrict jsondoc);
  * @param[in] key    key to find value
  * @return value found for the key or NULL
  */
-JSON_EXPORT
+JSON_INLINE
 const json_t*
-json_get(const json_t * __restrict object, const char * __restrict key);
+json_get(const json_t * __restrict object, const char * __restrict key) {
+  const json_t *iter;
+  size_t        keysize;
+  
+  if (!object || !key || !(iter = object->value))
+    return NULL;
+  
+  keysize = strlen(key);
+  while (iter && strncmp(iter->key, key, keysize) != 0)
+    iter = iter->next;
+
+  return iter;
+}
 
 /*!
  * @brief contenient function to cast object's child/value to array

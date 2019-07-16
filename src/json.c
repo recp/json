@@ -234,19 +234,3 @@ json_free(json_doc_t * __restrict jsondoc) {
   free(jsondoc->memroot);
   free(jsondoc);
 }
-
-JSON_EXPORT
-const json_t*
-json_get(const json_t * __restrict object, const char * __restrict key) {
-  const json_t *iter;
-  size_t        keysize;
-
-  if (!object || !key || !(iter = object->value))
-    return NULL;
-
-  keysize = strlen(key);
-  while (iter && strncmp(iter->key, key, keysize) != 0)
-    iter = iter->next;
-  
-  return iter;
-}
