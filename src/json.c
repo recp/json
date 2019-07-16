@@ -78,20 +78,30 @@ json_value(const char ** __restrict ptr, int * restrict valuesize) {
   return start;
 }
 
-JSON_INLINE
-void
-json_child(json_doc_t * __restrict doc,
-           json_t     * __restrict parent) {
-  json_t     *obj, *val;
+JSON_EXPORT
+json_doc_t*
+json_parse(const char * __restrict contents) {
+  json_doc_t *doc;
+  json_t     *obj, *val, *parent;
   const char *key;
+  json_t      tmproot;
   int         keysize;
   char        c;
   bool        lookingForKey;
 
-  if (!doc->ptr || (c = *doc->ptr) == '\0')
-    return;
+  if (!contents || (c = *contents) == '\0')
+    return NULL;
 
+  doc            = calloc(1, sizeof(*doc));
+  doc->memroot   = calloc(1, JSON_MEM_PAGE);
+  doc->ptr       = contents;
+  
+  tmproot.type   = JSON_OBJECT;
+  tmproot.prev   = NULL;
+  tmproot.value  = NULL;
+  
   key            = NULL;
+  parent         = &tmproot;
   obj            = parent;
   keysize        = 0;
   lookingForKey  = false;
@@ -157,9 +167,9 @@ json_child(json_doc_t * __restrict doc,
           key = json_key(&doc->ptr, &keysize);
           if (key == NULL || ((c = *key) == '\0'))
             goto err;
+          
           lookingForKey = false;
-
-          c = *doc->ptr;
+          c             = *doc->ptr;
 
           /* jump to value */
           for (;;) {
@@ -200,39 +210,20 @@ json_child(json_doc_t * __restrict doc,
             val->keySize = keysize;
             key          = NULL;
           }
-          
-          val->value = json_value(&doc->ptr, &val->valSize);
-          c = *doc->ptr;
-          goto again;
 
+          val->value = json_value(&doc->ptr, &val->valSize);
+          c          = *doc->ptr;
+
+          goto again;
         } /* if lookingForKey */
       } /* switch->default */
     }
   } while ((c = *doc->ptr) != '\0' && (c = *++doc->ptr) != '\0');
 
 err:
-  return;
-}
-
-JSON_EXPORT
-json_doc_t*
-json_parse(const char * __restrict contents) {
-  json_doc_t *doc;
-  json_t      tmproot;
-
-  doc           = calloc(1, sizeof(*doc));
-  doc->memroot  = calloc(1, JSON_MEM_PAGE);
-  doc->ptr      = contents;
-  tmproot.type  = JSON_OBJECT;
-  tmproot.prev  = NULL;
-  tmproot.value = NULL;
-
-  json_child(doc, &tmproot);
-
-  if (tmproot.value) {
+  if (tmproot.value)
     ((json_t *)tmproot.value)->prev = NULL;
-  }
-
+  
   doc->root = tmproot.value;
   return doc;
 }
