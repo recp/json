@@ -7,22 +7,24 @@ It does not alloc any memory for JSON itself, it only allocs memory for tokens. 
 
 
 ## Features
--  doesn't alloc memory for keys and values only for tokens
--  creates DOM-like data structure to make it easy to iterate though
--  simple api
--  provides some util functions to print json, get int32, int64, float, double...
--  very small library
+
+  -  doesn't alloc memory for keys and values only for tokens
+  -  creates DOM-like data structure to make it easy to iterate though
+  -  simple api
+  -  provides some util functions to print json, get int32, int64, float, double...
+  -  very small library
 
 ## TODOs
-- [ ]  ignore comments?
-- [ ]  provide header only library and optionally compile version
-- [ ]  provide option to preserve array order (currently array order is reversed, because it is easy to parse it in this way; this may be changed. Please follow new commits or releases)
-- [ ]  windows build
-- [ ]  cmake?
-- [ ]  tests
-- [ ]  extra optimizations
-- [ ]  documentation
-- [ ]  usage in detail
+
+  - [ ]  ignore comments?
+  - [ ]  provide header only library and optionally compile version
+  - [ ]  provide option to preserve array order (currently array order is reversed, because it is easy to parse it in this way; this may be changed. Please follow new commits or releases)
+  - [ ]  windows build
+  - [ ]  cmake?
+  - [ ]  tests
+  - [ ]  extra optimizations
+  - [ ]  documentation
+  - [ ]  usage in detail
 
 ## Build
 
