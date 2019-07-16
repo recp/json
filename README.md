@@ -1,6 +1,7 @@
 # 🔋 JSON parser for `C`
 
 [![Build Status](https://travis-ci.org/recp/json.svg?branch=master)](https://travis-ci.org/recp/json)
+[![Build status](https://ci.appveyor.com/api/projects/status/c2lm67q37u2s2gu2/branch/master?svg=true)](https://ci.appveyor.com/project/recp/json/branch/master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5c5ff7a0b2834889b7a83f7856112133)](https://www.codacy.com/app/recp/json?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=recp/json&amp;utm_campaign=Badge_Grade)
 
 This is very simple and very powerful JSON parser. It creates DOM-like data structure and allows to iterate and process JSON objects very simple way.
