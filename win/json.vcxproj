@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\dllmain.c" />
     <ClCompile Include="..\src\json.c" />
   </ItemGroup>
   <ItemGroup>
