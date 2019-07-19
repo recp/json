@@ -131,7 +131,7 @@ json_string(const json_t * __restrict object) {
  * @return NULL terminated duplicated string value
  */
 JSON_INLINE
-const char*
+char*
 json_string_dup(const json_t * __restrict object) {
   return strndup(object->value, object->valSize);
 }
