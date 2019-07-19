@@ -22,18 +22,15 @@
 JSON_INLINE
 void
 json_print_pad(const json_t * __restrict json, int pad) {
-  char *key, *value;
-  int   i;
+  int i;
 
   while (json) {
     for (i = 0; i < pad; i++)
       printf("\t");
 
-    if (json->key) {
-      key = alloca(json->keySize + 1);
-      snprintf(key, json->keySize + 1, "%s", json->key);
-      printf("\"%s\": ", key);
-    }
+    if (json->key)
+      printf("\"%.*s\": ", json->keySize, json->key);
+
     switch (json->type) {
       case JSON_OBJECT:
         printf("{\n");
@@ -50,10 +47,7 @@ json_print_pad(const json_t * __restrict json, int pad) {
         break;
 
       case JSON_STRING:
-        value = alloca(json->valSize + 1);
-        snprintf(value, json->valSize + 1, "%s", json_string(json));
-
-        printf("\"%s\"", value);
+        printf("\"%.*s\": ", json->valSize, json_string(json));
 
         if (json->next)
           printf(",");

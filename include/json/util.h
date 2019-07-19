@@ -10,6 +10,7 @@
 
 #include "common.h"
 #include <stdlib.h>
+#include <string.h>
 
 JSON_INLINE
 int32_t
@@ -69,6 +70,12 @@ JSON_INLINE
 const char*
 json_string(const json_t * __restrict object) {
   return (const char *)object->value;
+}
+
+JSON_INLINE
+bool
+json_key_eq(const json_t * __restrict obj, const char * __restrict str) {
+  return strncmp(str, obj->key, obj->keySize) == 0;
 }
 
 #endif /* json_util_h */

@@ -9,6 +9,8 @@
 #define json_h
 
 #include "common.h"
+#include "util.h"
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -80,7 +82,7 @@ json_get(const json_t * __restrict object, const char * __restrict key) {
  */
 JSON_INLINE
 const json_array_t*
-json_array(json_t * __restrict object) {
+json_array(const json_t * __restrict object) {
   if (object->type != JSON_ARRAY || !object->value)
     return NULL;
 
