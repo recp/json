@@ -12,11 +12,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define JSON_MEM_PAGE 8192
+#define JSON_MEM_PAGE 30720 /* 30K */
 
 typedef struct json_mem_t {
   struct json_mem_t *next;
   size_t             size;
+  size_t             capacity;
   char               data[];
 } json_mem_t;
 
@@ -26,18 +27,21 @@ void*
 json_calloc(json_doc_t * __restrict doc, size_t size) {
   void       *data;
   json_mem_t *mem;
+  size_t      sizeToAlloc;
+
+  mem         = doc->memroot;
+  sizeToAlloc = (JSON_MEM_PAGE < size) ? size : JSON_MEM_PAGE;
   
-  mem = doc->memroot;
-  
-  if (mem->size > (JSON_MEM_PAGE - size)) {
-    mem          = calloc(1, JSON_MEM_PAGE);
-    mem->next    = doc->memroot;
-    doc->memroot = mem;
+  if ((mem->capacity - mem->size) < size) {
+    mem           = calloc(1, sizeof(*mem) + sizeToAlloc);
+    mem->capacity = sizeToAlloc;
+    mem->next     = doc->memroot;
+    doc->memroot  = mem;
   }
   
-  data       = &mem->data[mem->size];
+  data       = (char *)mem->data + mem->size;
   mem->size += size;
-  
+
   return data;
 }
 

@@ -90,7 +90,7 @@ json_parse(const char * __restrict contents) {
     return NULL;
 
   doc            = calloc(1, sizeof(*doc));
-  doc->memroot   = calloc(1, JSON_MEM_PAGE);
+  doc->memroot   = calloc(1, sizeof(json_mem_t) + JSON_MEM_PAGE);
   doc->ptr       = contents;
   
   tmproot.type   = JSON_OBJECT;
@@ -103,6 +103,8 @@ json_parse(const char * __restrict contents) {
   keysize        = 0;
   lookingForKey  = false;
 
+  ((json_mem_t *)doc->memroot)->capacity = sizeof(json_mem_t) + JSON_MEM_PAGE;
+  
   do {
   again:
     /* child */
