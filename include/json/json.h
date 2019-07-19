@@ -9,6 +9,8 @@
 #define json_h
 
 #include "common.h"
+#include "util.h"
+
 #include <stdlib.h>
 #include <string.h>
 
