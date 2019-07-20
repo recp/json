@@ -79,6 +79,46 @@ int main(int argc, const char * argv[]) {
 
 ```
 
+```C
+
+const json_doc_t *jsonDoc;
+const json_t         *json;
+
+jsonDoc = json_parse(/* JSON string */);
+json    = jsonDoc->root->value;
+
+while (json) {
+    if (json_key_eq(json, "key 1")) {
+      int aNumber;
+
+     aNumber = json_int32(json, 0);
+
+     /* ... */
+    } else if (json_key_eq(json, "key 2")) {
+      const char *nonNullTerminatedString;
+      const char *nullTerminatedString;
+
+      /* just pointer */
+      nonNullTerminatedString = json_string(json);
+
+       /* null-terminated string (strdup), needs to be freed */
+      nullTerminatedString    = json_string_dup(json);
+
+     /* ... */
+    } else if (json_key_eq(json,"key 3")) {
+      json_t *aChild;
+      
+      aChild = json->value;
+      while (aChild) {
+          /* handle child node */
+          aChild = aChild->next;
+      }
+    }
+
+    json = json->next;
+}
+```
+
 ## License
 
 MIT. check the LICENSE file
