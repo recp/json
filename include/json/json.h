@@ -86,7 +86,7 @@ json_array(const json_t * __restrict object) {
   if (object->type != JSON_ARRAY || !object->value)
     return NULL;
 
-  return object->value;
+  return (void *)object;
 }
 
 #endif /* json_h */
