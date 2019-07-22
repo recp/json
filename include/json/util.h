@@ -109,6 +109,33 @@ json_double(const json_t * __restrict object, double defaultValue) {
 }
 
 /*!
+ * @brief creates boolean from string value
+ *
+ * @param[in] object       json object
+ * @param[in] defaultValue default value if operation fails
+ * @return boolean values as integer: 1 true, 0 false, error: defaultValue
+ */
+JSON_INLINE
+int
+json_bool(const json_t * __restrict object, int defaultValue) {
+  const char *boolString;
+  char        first;
+
+  if (object->type != JSON_STRING || !(boolString = object->value))
+    return defaultValue;
+
+  first = boolString[0];
+
+  if (first == 't' || first == '1') {
+    return 1;
+  } else if (first == 'n' || first == '0') {
+    return 0;
+  }
+
+  return defaultValue;
+}
+
+/*!
  * @brief return non-NULL terminated string value
  *
  * you must use object->valSize to copy, compare ... string
