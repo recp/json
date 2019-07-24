@@ -30,7 +30,7 @@ Complete documentation: http://json.readthedocs.io
 - [ ] cmake?
 - [ ] tests
 - [ ] extra optimizations
-- [ ] documentation
+- [x] documentation
 - [ ] usage in detail
 
 ## Build
