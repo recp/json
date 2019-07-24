@@ -21,12 +21,23 @@ Complete documentation: http://json.readthedocs.io
 - provides some util functions to print json, get int32, int64, float, double...
 - very small library
 
+#### Important Note for Arrays
+
+- **json_array_t** inherits **json_t**, so you can cast **json_array_t** to **json_t**. It only adds **count** member.
+- The **value** link gives array's childen (currently last element)
+- Currently **json_array_t** stores array items as reverse order. For instance if you have 10 items in array, the last item index is 0, and first one is 9. 
+- Every item of **json_array_t** is **json_t**. You can get integer, float or boolean values from that object. The **next** link of that object is next item of that object in array.
+
+#### Important Note for keys and values
+
+- json doesn't copy keys and values, it only gives pointers to key and values. So when compaing keys or copying values, you must use keySize or valSize. Or you can use builtin inline functions.
+
 ## TODOs
 
 - [ ] ignore comments?
 - [ ] provide header only library and optionally compile version
 - [ ] provide option to preserve array order (currently array order is reversed, because it is easy to parse it in this way; this may be changed. Please follow new commits or releases)
-- [ ] windows build
+- [x] windows build
 - [ ] cmake?
 - [ ] tests
 - [ ] extra optimizations
@@ -92,6 +103,13 @@ const json_t         *json;
 
 jsonDoc = json_parse(/* JSON string */);
 json    = jsonDoc->root->value;
+
+/* already defined in util.h */
+JSON_INLINE
+bool
+json_key_eq(const json_t * __restrict obj, const char * __restrict str) {
+  return strncmp(str, obj->key, obj->keySize) == 0;
+}
 
 while (json) {
     if (json_key_eq(json, "key 1")) {
