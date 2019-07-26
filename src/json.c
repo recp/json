@@ -135,6 +135,9 @@ json_parse(const char * __restrict contents) {
         }
 
         /* parent must not be NULL */
+        if (parent->value)
+          ((json_t *)parent->value)->prev = obj;
+
         obj->prev     = parent;
         obj->next     = parent->value;
         parent->value = obj;
@@ -202,6 +205,9 @@ json_parse(const char * __restrict contents) {
             ++((json_array_t *)obj)->count;
 
           /* parent must not be NULL */
+          if (obj->value)
+            ((json_t *)obj->value)->prev = val;
+
           val->prev  = obj;
           val->next  = obj->value;
           obj->value = val;
