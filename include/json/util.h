@@ -176,4 +176,25 @@ json_key_eq(const json_t * __restrict obj, const char * __restrict str) {
   return strncmp(str, obj->key, obj->keySize) == 0;
 }
 
+/*!
+ * @brief returns parent object if available
+ *
+ * @param[in] obj json object
+ * @return returns parent object if available
+ */
+JSON_INLINE
+const json_t*
+json_parent(const json_t * __restrict obj) {
+  const json_t *prev;
+  if (!obj)
+    return NULL;
+
+  do {
+    prev = obj;
+    obj  = obj->prev;
+  } while (obj && obj->value != prev);
+
+  return obj;
+}
+
 #endif /* json_util_h */
