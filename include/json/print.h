@@ -14,78 +14,153 @@
 #include <stdio.h>
 
 /*!
- * @brief print json
+ * @brief print json with option
  *
- * @param[in] json json object
- * @param[in] pad  padding
+ * @param[in] ostream stream to print
+ * @param[in] json    json object
+ * @param[in] opt     0: uglify, 1: pretty, 2: human
  */
 JSON_INLINE
 void
-json_print_pad(const json_t * __restrict json, int pad) {
-  int i;
+json_print_ex(const FILE   * __restrict ostream,
+              const json_t * __restrict json,
+              int                       opt) {
+  const json_t *parent;
+  int           pad, i;
+
+  pad    = 0;
+  parent = NULL;
 
   while (json) {
-    for (i = 0; i < pad; i++)
-      printf("\t");
+    if (opt > 0) {
+      for (i = 0; i < pad; i++)
+        printf("\t");
 
-    if (json->key)
-      printf("\"%.*s\": ", json->keySize, json->key);
+      if (json->key)
+        printf("\"%.*s\": ", json->keySize, json->key);
+    } else {
+      if (json->key)
+        printf("\"%.*s\":", json->keySize, json->key);
+    }
 
     switch (json->type) {
       case JSON_OBJECT:
-        printf("{\n");
-        json_print_pad(json->value, pad + 1);
+        if (json->value) {
+          if (opt > 0)
+            printf("{\n");
+          else
+            printf("{");
 
-        for (i = 0; i < pad; i++)
-          printf("\t");
-        printf("}");
+          pad++;
 
-        if (json->next)
-          printf(",");
-
-        printf("\n");
+          parent = json;
+          json   = json->value;
+          continue;
+        }
         break;
 
       case JSON_STRING:
-        printf("\"%.*s\": ", json->valSize, json_string(json));
+        printf("\"%.*s\"", json->valSize, json_string(json));
 
         if (json->next)
           printf(",");
-        printf("\n");
+
+        if (opt > 0)
+          printf("\n");
         break;
 
       case JSON_ARRAY:
-        printf("(%d) [\n", ((json_array_t *)json)->count);
-        json_print_pad(json->value, pad + 1);
+        if (json->value) {
+          if (opt > 0)
+            if (opt > 1)
+              printf("(%d) [\n", ((json_array_t *)json)->count);
+            else
+              printf("[\n");
 
-        for (i = 0; i < pad; i++)
-          printf("\t");
-        printf("]");
+          else
+            printf("[");
 
-        if (json->next)
-          printf(",");
+          pad++;
 
-        printf("\n");
+          parent = json;
+          json   = json->value;
+          continue;
+        }
         break;
       default:
         break;
     }
 
-    json = json->next;
-  }
+    if (json->next) {
+      json = json->next;
+    } else if (parent) {
+      do {
+        --pad;
+
+        if (opt > 0) {
+          for (i = 0; i < pad; i++)
+            printf("\t");
+        }
+
+        if (parent->type == JSON_OBJECT)
+          printf("}");
+        else if (parent->type == JSON_ARRAY)
+          printf("]");
+
+        if (parent->next)
+          printf(",");
+
+        if (opt > 0)
+          printf("\n");
+
+        json   = parent->next;
+        parent = json_parent(parent);
+      } while (!json && parent);
+    } else {
+      break;
+    }
+  } /* while (json)  */
 }
 
 /*!
  * @brief print json
  *
- * @param[in] json json object with title and zero padding
+ * @param[in] ostream stream to print
+ * @param[in] json    json object
  */
 JSON_INLINE
 void
-json_print(const json_t * __restrict json) {
+json_print_pretty(const FILE   * __restrict ostream,
+                  const json_t * __restrict json) {
+  json_print_ex(ostream, json, 1);
+}
+
+/*!
+ * @brief print json for humans
+ *
+ * @param[in] ostream stream to print
+ * @param[in] json    json object
+ */
+JSON_INLINE
+void
+json_print_human(const FILE   * __restrict ostream,
+                 const json_t * __restrict json) {
   printf("json ( %p ):\n", json);
-  json_print_pad(json, 0);
+  json_print_ex(ostream, json, 2);
   printf("\n");
+}
+
+/*!
+ * @brief print json
+ *
+ * @param[in] ostream stream to print
+ * @param[in] json    json object
+ */
+JSON_INLINE
+void
+json_print_uglify(const FILE   * __restrict ostream,
+                  const json_t * __restrict json) {
+  json_print_ex(ostream, json, 0);
 }
 
 #endif /* json_print_h */
