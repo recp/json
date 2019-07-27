@@ -25,8 +25,7 @@ Complete documentation: http://json.readthedocs.io
 #### Important Note for Arrays
 
 - **json_array_t** inherits **json_t**, so you can cast **json_array_t** to **json_t**. It only adds **count** member.
-- The **value** link gives array's childen (currently last element)
-- Currently **json_array_t** stores array items as reverse order. For instance if you have 10 items in array, the last item index is 0, and first one is 9. 
+- The **value** link gives array's childen (last element if you set `reverse` to true)
 - Every item of **json_array_t** is **json_t**. You can get integer, float or boolean values from that object. The **next** link of that object is next item of that object in array.
 
 #### Important Note for keys and values
