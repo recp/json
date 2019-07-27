@@ -5,10 +5,10 @@
  * Full license can be found in the LICENSE file
  */
 
-#ifndef json_mem_h
-#define json_mem_h
+#ifndef json_impl_mem_h
+#define json_impl_mem_h
 
-#include "../include/json/common.h"
+#include "../common.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -21,14 +21,13 @@ typedef struct json_mem_t {
   char               data[];
 } json_mem_t;
 
-
 JSON_INLINE
 void*
-json_calloc(json_doc_t * __restrict doc, size_t size) {
+json__impl_calloc(json_doc_t * __restrict doc, size_t size) {
   void       *data;
   json_mem_t *mem;
   size_t      sizeToAlloc;
-
+  
   mem         = doc->memroot;
   sizeToAlloc = (JSON_MEM_PAGE < size) ? size : JSON_MEM_PAGE;
   
@@ -41,8 +40,8 @@ json_calloc(json_doc_t * __restrict doc, size_t size) {
   
   data       = (char *)mem->data + mem->size;
   mem->size += size;
-
+  
   return data;
 }
 
-#endif /* json_mem_h */
+#endif /* json_impl_mem_h */

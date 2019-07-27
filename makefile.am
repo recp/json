@@ -25,5 +25,12 @@ json_HEADERS = include/json/version.h \
                include/json/util.h \
                include/json/print.h
 
+json_calldir=$(includedir)/json/call
+json_call_HEADERS = include/json/call/json.h
+
+json_impldir=$(includedir)/json/impl
+json_impl_HEADERS = include/json/impl/impl_mem.h \
+                    include/json/impl/impl_json.h
+
 libjson_la_SOURCES=\
     src/json.c

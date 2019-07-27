@@ -71,14 +71,14 @@ json_print_ex(const FILE   * __restrict ostream,
 
       case JSON_ARRAY:
         if (json->value) {
-          if (opt > 0)
+          if (opt > 0) {
             if (opt > 1)
               printf("(%d) [\n", ((json_array_t *)json)->count);
             else
               printf("[\n");
-
-          else
+          } else {
             printf("[");
+          }
 
           pad++;
 

@@ -22,12 +22,14 @@
     <ClCompile Include="..\src\json.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\json\call\json.h" />
     <ClInclude Include="..\include\json\common.h" />
+    <ClInclude Include="..\include\json\impl\impl_json.h" />
+    <ClInclude Include="..\include\json\impl\impl_mem.h" />
     <ClInclude Include="..\include\json\json.h" />
     <ClInclude Include="..\include\json\print.h" />
     <ClInclude Include="..\include\json\util.h" />
     <ClInclude Include="..\include\json\version.h" />
-    <ClInclude Include="..\src\mem.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
