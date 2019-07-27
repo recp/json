@@ -15,6 +15,7 @@ Complete documentation: http://json.readthedocs.io
 
 ## Features
 
+- header-only or optional compiled library
 - doesn't alloc memory for keys and values only for tokens
 - creates DOM-like data structure to make it easy to iterate though
 - simple api
