@@ -35,7 +35,7 @@ Complete documentation: http://json.readthedocs.io
 ## TODOs
 
 - [ ] ignore comments?
-- [ ] provide header only library and optionally compile version
+- [x] provide header only library and optionally compile version
 - [ ] provide option to preserve array order (currently array order is reversed, because it is easy to parse it in this way; this may be changed. Please follow new commits or releases)
 - [x] windows build
 - [ ] cmake?
@@ -69,6 +69,14 @@ cd win
 ```
 
 ### Cmake
+
+todo.
+
+### Header-only or Compiled Library
+
+The functions has the `jsonc_` prefix are compiled version which is called from library. To use this feature you must include `json/call/json.h` header.
+
+To use header-only library you must include `json/json.h` header. The functions has the `json_` prefix are forced to be inlined. When you use this, you don't have to compile the library.
 
 todo.
 
