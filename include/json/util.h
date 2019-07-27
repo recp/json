@@ -160,7 +160,13 @@ json_string(const json_t * __restrict object) {
 JSON_INLINE
 char*
 json_string_dup(const json_t * __restrict object) {
-  return strndup(object->value, object->valSize);
+  char *s;
+
+  s = malloc(object->valSize + 1);
+  memcpy(s, object->value, object->valSize);
+  s[object->valSize] = '\0';
+
+  return s;
 }
 
 /*!
