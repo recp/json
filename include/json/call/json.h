@@ -31,11 +31,12 @@
  *  5. free `contents`
  *
  * @param[in] contents JSON string
+ * @param[in] reverse  store members, array items as reverse order
  * @return json document which contains json object as root object
  */
 JSON_EXPORT
 json_doc_t*
-jsonc_parse(const char * __restrict contents);
+jsonc_parse(const char * __restrict contents, bool reverse);
 
 /*!
  * @brief frees json document and its allocated memory

@@ -37,7 +37,7 @@ Complete documentation: http://json.readthedocs.io
 
 - [ ] ignore comments?
 - [x] provide header only library and optionally compile version
-- [ ] provide option to preserve array order (currently array order is reversed, because it is easy to parse it in this way; this may be changed. Please follow new commits or releases)
+- [x] provide option to preserve array order (currently array order is reversed, because it is easy to parse it in this way; this may be changed. Please follow new commits or releases)
 - [x] windows build
 - [ ] cmake?
 - [ ] tests

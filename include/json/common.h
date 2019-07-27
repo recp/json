@@ -43,13 +43,13 @@ typedef enum json_type_t {
 } json_type_t;
 
 typedef struct json_t {
-  struct json_t       *prev;
-  const struct json_t *next;
-  const char          *key;
-  const void          *value;
-  int                  valSize;
-  int                  keySize;
-  json_type_t          type;
+  struct json_t *prev;
+  struct json_t *next;
+  const char    *key;
+  void          *value;
+  int            valSize;
+  int            keySize;
+  json_type_t    type;
 } json_t;
 
 typedef struct json_array_t {

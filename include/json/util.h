@@ -150,6 +150,15 @@ json_string(const json_t * __restrict object) {
 }
 
 /*!
+ * @brief return json object from value
+ */
+JSON_INLINE
+json_t*
+json_json(const json_t * __restrict object) {
+  return (json_t *)object->value;
+}
+
+/*!
  * @brief return NULL terminated duplicated string value
  *
  * value must be free-ed when no longer needed

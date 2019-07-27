@@ -39,7 +39,7 @@ json__impl_key(const char ** __restrict ptr, int * __restrict keysize) {
 }
 
 JSON_INLINE
-const void*
+void*
 json__impl_value(const char ** __restrict ptr, int * __restrict valuesize) {
   const char *pi, *end, *start;
   char        c;
@@ -72,12 +72,12 @@ json__impl_value(const char ** __restrict ptr, int * __restrict valuesize) {
   *valuesize = (int)(end - start);
   *ptr       = pi;
 
-  return start;
+  return (void *)start;
 }
 
 JSON_INLINE
 json_doc_t*
-json_parse(const char * __restrict contents) {
+json_parse(const char * __restrict contents, bool reverse) {
   json_doc_t *doc;
   json_t     *obj, *val, *parent;
   const char *key;
@@ -93,9 +93,8 @@ json_parse(const char * __restrict contents) {
   doc->memroot   = calloc(1, sizeof(json_mem_t) + JSON_MEM_PAGE);
   doc->ptr       = contents;
 
+  memset(&tmproot, 0, sizeof(tmproot));
   tmproot.type   = JSON_OBJECT;
-  tmproot.prev   = NULL;
-  tmproot.value  = NULL;
 
   key            = NULL;
   parent         = &tmproot;
@@ -135,11 +134,23 @@ json_parse(const char * __restrict contents) {
         }
 
         /* parent must not be NULL */
-        if (parent->value)
-          ((json_t *)parent->value)->prev = obj;
 
-        obj->prev     = parent;
-        obj->next     = parent->value;
+        if (reverse) {
+          if (!parent->next) {
+            parent->next = obj;
+            obj->prev    = parent;
+          } else {
+            json_json(parent)->next = obj;
+            obj->prev               = parent->value;
+          }
+        } else {
+          if (parent->value)
+            json_json(parent)->prev = obj;
+
+          obj->prev = parent;
+          obj->next = parent->value;
+        }
+
         parent->value = obj;
 
         if (key) {
@@ -153,8 +164,13 @@ json_parse(const char * __restrict contents) {
       case '}':
       case ']':
         /* switch parent back */
-        if (!parent || !parent->prev)
+        if (!parent)
           goto err;
+
+        if (reverse) {
+          obj->value = obj->next;
+          obj->next  = NULL;
+        }
 
         obj           = parent;
         parent        = parent->prev;
@@ -205,11 +221,23 @@ json_parse(const char * __restrict contents) {
             ++((json_array_t *)obj)->count;
 
           /* parent must not be NULL */
-          if (obj->value)
-            ((json_t *)obj->value)->prev = val;
 
-          val->prev  = obj;
-          val->next  = obj->value;
+          if (reverse) {
+            if (!obj->next) {
+              obj->next = val;
+              val->prev = obj;
+            } else {
+              json_json(obj)->next = val;
+              val->prev            = obj->value;
+            }
+          } else {
+            if (obj->value)
+              json_json(obj)->prev = val;
+
+            val->prev  = obj;
+            val->next  = obj->value;
+          }
+
           obj->value = val;
 
           if (key) {
