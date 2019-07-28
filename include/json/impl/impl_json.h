@@ -135,7 +135,7 @@ json_parse(const char * __restrict contents, bool reverse) {
 
         /* parent must not be NULL */
 
-        if (reverse) {
+        if (!reverse) {
           if (!parent->next) {
             parent->next = obj;
             obj->prev    = parent;
@@ -167,7 +167,7 @@ json_parse(const char * __restrict contents, bool reverse) {
         if (!parent)
           goto err;
 
-        if (reverse) {
+        if (!reverse) {
           obj->value = obj->next;
           obj->next  = NULL;
         }
@@ -222,7 +222,7 @@ json_parse(const char * __restrict contents, bool reverse) {
 
           /* parent must not be NULL */
 
-          if (reverse) {
+          if (!reverse) {
             if (!obj->next) {
               obj->next = val;
               val->prev = obj;
