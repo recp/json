@@ -89,6 +89,9 @@ json_parse(const char * __restrict contents, bool reverse) {
   if (!contents || (c = *contents) == '\0')
     return NULL;
 
+  /* TODO: curreently !reverse is not working properly */
+  reverse = true;
+
   doc            = calloc(1, sizeof(*doc));
   doc->memroot   = calloc(1, sizeof(json_mem_t) + JSON_MEM_PAGE);
   doc->ptr       = contents;
@@ -258,6 +261,11 @@ json_parse(const char * __restrict contents, bool reverse) {
 err:
   if (tmproot.value)
     ((json_t *)tmproot.value)->prev = NULL;
+
+  if (!reverse) {
+    tmproot.value = tmproot.next;
+    tmproot.next  = NULL;
+  }
 
   doc->root = tmproot.value;
   return doc;
