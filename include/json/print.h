@@ -93,7 +93,7 @@ json_print_ex(const FILE   * __restrict ostream,
 
     if (json->next) {
       json = json->next;
-    } else if (parent) {
+    } else if ((parent = json->parent)) {
       do {
         --pad;
 
@@ -114,7 +114,7 @@ json_print_ex(const FILE   * __restrict ostream,
           printf("\n");
 
         json   = parent->next;
-        parent = json_parent(parent);
+        parent = parent->parent;
       } while (!json && parent);
     } else {
       break;

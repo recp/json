@@ -200,6 +200,7 @@ json_key_eq(const json_t * __restrict obj, const char * __restrict str) {
 JSON_INLINE
 const json_t*
 json_parent(const json_t * __restrict obj) {
+  /*
   const json_t *prev;
   if (!obj)
     return NULL;
@@ -209,7 +210,9 @@ json_parent(const json_t * __restrict obj) {
     obj  = obj->prev;
   } while (obj && obj->value != prev);
 
-  return obj;
+  return obj;*/
+
+  return obj->parent;
 }
 
 #endif /* json_util_h */

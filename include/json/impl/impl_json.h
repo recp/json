@@ -89,9 +89,6 @@ json_parse(const char * __restrict contents, bool reverse) {
   if (!contents || (c = *contents) == '\0')
     return NULL;
 
-  /* TODO: curreently !reverse is not working properly */
-  reverse = true;
-
   doc            = calloc(1, sizeof(*doc));
   doc->memroot   = calloc(1, sizeof(json_mem_t) + JSON_MEM_PAGE);
   doc->ptr       = contents;
@@ -139,22 +136,16 @@ json_parse(const char * __restrict contents, bool reverse) {
         /* parent must not be NULL */
 
         if (!reverse) {
-          if (!parent->next) {
+          if (!parent->next)
             parent->next = obj;
-            obj->prev    = parent;
-          } else {
+          else
             json_json(parent)->next = obj;
-            obj->prev               = parent->value;
-          }
         } else {
-          if (parent->value)
-            json_json(parent)->prev = obj;
-
-          obj->prev = parent;
           obj->next = parent->value;
         }
 
         parent->value = obj;
+        obj->parent   = parent;
 
         if (key) {
           obj->key     = key;
@@ -176,7 +167,7 @@ json_parse(const char * __restrict contents, bool reverse) {
         }
 
         obj           = parent;
-        parent        = parent->prev;
+        parent        = parent->parent;
         lookingForKey = obj->type == JSON_OBJECT;
 
         break;
@@ -226,22 +217,16 @@ json_parse(const char * __restrict contents, bool reverse) {
           /* parent must not be NULL */
 
           if (!reverse) {
-            if (!obj->next) {
+            if (!obj->next)
               obj->next = val;
-              val->prev = obj;
-            } else {
+             else
               json_json(obj)->next = val;
-              val->prev            = obj->value;
-            }
           } else {
-            if (obj->value)
-              json_json(obj)->prev = val;
-
-            val->prev  = obj;
-            val->next  = obj->value;
+            val->next = obj->value;
           }
 
-          obj->value = val;
+          obj->value  = val;
+          val->parent = obj;
 
           if (key) {
             val->key     = key;
@@ -260,12 +245,7 @@ json_parse(const char * __restrict contents, bool reverse) {
 
 err:
   if (tmproot.value)
-    ((json_t *)tmproot.value)->prev = NULL;
-
-  if (!reverse) {
-    tmproot.value = tmproot.next;
-    tmproot.next  = NULL;
-  }
+    ((json_t *)tmproot.value)->parent = NULL;
 
   doc->root = tmproot.value;
   return doc;
