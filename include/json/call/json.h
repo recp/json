@@ -7,6 +7,9 @@
 
 #ifndef json_call_json_h
 #define json_call_json_h
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "../common.h"
 #include "../json.h"
@@ -45,4 +48,7 @@ JSON_EXPORT
 void
 jsonc_free(json_doc_t * __restrict jsondoc);
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* json_call_json_h */
