@@ -26,7 +26,7 @@ Complete documentation: http://json.readthedocs.io
 
 #### Object Map
 
-Here a cool and very easy and very fast way to parse known JSON: objmap. 
+Here a VERY UNIQUE and VERY COOL and VERY EASY and VERY FAST way to parse known JSON: objmap. 
 
 ```C
 void
