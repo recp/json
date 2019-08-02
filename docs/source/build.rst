@@ -3,6 +3,10 @@ Build json
 
 | **json** library does not have external dependencies.
 
+**NOTE:**
+If you only need to inline versions, you don't need to build **json**, you don't need to link it to your program.
+Just import cglm to your project as dependency / external lib by copy-paste then use it as usual
+
 Unix (Autotools):
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -60,4 +64,4 @@ Example build:
   or
 
   $ cd json/docs
-  $ sh ./build-docs.sh 
+  $ sh ./build-docs.sh
