@@ -22,7 +22,39 @@ Complete documentation: http://json.readthedocs.io
 - simple api
 - provides some util functions to print json, get int32, int64, float, double...
 - very small library
+- unique way to parse JSON (check the object map section)
 
+#### Object Map
+
+Here a cool and very easy and very fast way to parse known JSON: objmap. 
+
+```C
+void
+callback_1(json_t * __restrict json, void * __restrict obj) {
+  printf("eeeveeet\n");
+}
+
+json = json_parse(/* JSON string */, true);
+
+json_objmap_t objmap[] = {
+    {
+      .key = "key1",
+      .foundFunc = {
+        .func = callback_1
+      }
+    },
+    {
+      .key = "key2",
+      .foundFunc = {
+        .func = callback_1
+      }
+    }
+};
+
+json_objmap_call(json, objmap, ARRAY_LEN(objmap), NULL);
+```
+
+In this way you don't have to compare keys in a loopi just map the keys with a function or with userdata. You don't have to use function in this way, you may use to map json object to userdata which may be a GOTO LABEL (to use compound gotos) or something else. 
 
 #### Important Note for Arrays
 
