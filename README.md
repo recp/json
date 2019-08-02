@@ -94,10 +94,10 @@ int main(int argc, const char * argv[]) {
   json_doc_t *doc;
   json_t     *root;
   
-  doc  = json_parse(/* JSON string */);
+  doc  = json_parse(/* JSON string */, true);
   root = doc->root;
 
-  json_print(root);
+  json_print_human(stderr, root);
 
   json_free(doc);
 
@@ -111,7 +111,7 @@ int main(int argc, const char * argv[]) {
 const json_doc_t *jsonDoc;
 const json_t         *json;
 
-jsonDoc = json_parse(/* JSON string */);
+jsonDoc = json_parse(/* JSON string */, true);
 json    = jsonDoc->root->value;
 
 /* already defined in util.h */
