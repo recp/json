@@ -31,7 +31,7 @@ Here a VERY UNIQUE and VERY COOL and VERY EASY and VERY FAST way to parse known 
 ```C
 void
 callback_1(json_t * __restrict json, void * __restrict obj) {
-  printf("eeeveeet\n");
+  printf("entered callback_1\n");
 }
 
 json = json_parse(/* JSON string */, true);
@@ -40,7 +40,8 @@ json_objmap_t objmap[] = {
     {
       .key = "key1",
       .foundFunc = {
-        .func = callback_1
+        .func  = callback_1,
+        .param = "callback 1 param" 
       }
     },
     {
@@ -194,7 +195,7 @@ Here a VERY UNIQUE and VERY COOL and VERY EASY and VERY FAST way to parse known 
 ```C
 void
 callback_1(json_t * __restrict json, void * __restrict obj) {
-  printf("eeeveeet\n");
+  printf("entered callback_1\n");
 }
 
 json = json_parse(/* JSON string */, true);
