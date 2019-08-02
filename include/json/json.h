@@ -78,5 +78,6 @@ bool
 json_is_array(const json_t * __restrict object);
 
 #include "impl/impl_json.h"
+#include "objmap.h"
 
 #endif /* json_h */
