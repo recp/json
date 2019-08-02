@@ -53,6 +53,9 @@ json_objmap_t objmap[] = {
 };
 
 json_objmap_call(json, objmap, ARRAY_LEN(objmap), NULL);
+
+/* or use this to iterate objmap manually */
+json_objmap(json, objmap, ARRAY_LEN(objmap));
 ```
 
 In this way you don't have to compare keys in a loopi just map the keys with a function or with userdata. You don't have to use function in this way, you may use to map json object to userdata which may be a GOTO LABEL (to use compound gotos) or something else. 
