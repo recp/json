@@ -53,8 +53,8 @@ json_print_ex(const FILE   * __restrict ostream,
 
           pad++;
 
-          parent = json;
-          json   = json->value;
+          /* parent = json; */
+          json = json->value;
           continue;
         }
         break;
@@ -82,8 +82,8 @@ json_print_ex(const FILE   * __restrict ostream,
 
           pad++;
 
-          parent = json;
-          json   = json->value;
+          /* parent = json; */
+          json = json->value;
           continue;
         }
         break;

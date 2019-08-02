@@ -73,6 +73,10 @@ JSON_INLINE
 const json_array_t*
 json_array(const json_t * __restrict object);
 
+JSON_INLINE
+bool
+json_is_array(const json_t * __restrict object);
+
 #include "impl/impl_json.h"
 
 #endif /* json_h */

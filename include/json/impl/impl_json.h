@@ -290,3 +290,9 @@ json_array(const json_t * __restrict object) {
   
   return (void *)object;
 }
+
+JSON_INLINE
+bool
+json_is_array(const json_t * __restrict object) {
+  return object->type == JSON_ARRAY;
+}
