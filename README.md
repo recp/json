@@ -36,15 +36,17 @@ Complete documentation: http://json.readthedocs.io
 
 ## TODOs
 
-- [ ] ignore comments?
 - [x] provide header only library and optionally compile version
 - [x] provide option to preserve array order (currently array order is reversed, because it is easy to parse it in this way; this may be changed. Please follow new commits or releases)
 - [x] windows build
+- [x] documentation
+- [ ] ignore comments?
 - [ ] cmake?
 - [ ] tests
 - [ ] extra optimizations
-- [x] documentation
 - [ ] usage in detail
+- [ ] Unicode support (UTF-8)
+- [ ] null object
 
 ## Build
 
