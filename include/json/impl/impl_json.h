@@ -5,6 +5,9 @@
  * Full license can be found in the LICENSE file
  */
 
+#ifndef json_impl_json_h
+#define json_impl_json_h
+
 #include "../json.h"
 #include "impl_mem.h"
 
@@ -296,3 +299,5 @@ bool
 json_is_array(const json_t * __restrict object) {
   return object->type == JSON_ARRAY;
 }
+
+#endif /* json_impl_json_h */
