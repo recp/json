@@ -26,6 +26,8 @@
 #  define JSON_INLINE static inline __attribute((always_inline))
 #endif
 
+#define JSON_ARR_LEN(ARR) (sizeof(ARR)/sizeof(ARR[0]))
+
 typedef enum json_type_t {
   JSON_UNKOWN  = 0,
   JSON_OBJECT  = 1,
