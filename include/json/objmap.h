@@ -14,8 +14,8 @@ typedef void (*json_objmap_fun_t)(json_t * __restrict object,
                                   void * __restrict userdata);
 
 typedef struct json_func_t {
-  void             *param;
   json_objmap_fun_t func;
+  void             *param;
 } json_func_t;
 
 typedef struct json_objmap_t {
