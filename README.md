@@ -52,6 +52,14 @@ json_objmap_t objmap[] = {
     }
 };
 
+/* or you can use macro helpers which is more readable if you don't need more details: */
+json_objmap_t objmap[] = {
+    JSON_OBJMAP_FN("key 1", func1, param1),
+    JSON_OBJMAP_FN("key 2", func2, param2),
+    JSON_OBJMAP_FN("key 3", func3, param3),
+    /* ... */
+};
+
 json_objmap_call(json, objmap, ARRAY_LEN(objmap), NULL);
 
 /* or use this to iterate objmap manually */
@@ -216,6 +224,14 @@ json_objmap_t objmap[] = {
         .func = callback_1
       }
     }
+};
+
+/* or you can use macro helpers which is more readable if you don't need more details: */
+json_objmap_t objmap[] = {
+    JSON_OBJMAP_FN("key 1", func1, param1),
+    JSON_OBJMAP_FN("key 2", func2, param2),
+    JSON_OBJMAP_FN("key 3", func3, param3),
+    /* ... */
 };
 
 json_objmap_call(json, objmap, ARRAY_LEN(objmap), NULL);
