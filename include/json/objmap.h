@@ -10,6 +10,34 @@
 
 #include "common.h"
 
+/*
+ helpers to create objmap arrays, for example:
+
+  json_objmap_t objmap[] = {
+    JSON_OBJMAP_FN("key 1",  func1, param1),
+    JSON_OBJMAP_FN("key 2",  func2, param2),
+    JSON_OBJMAP_FN("key 3",  func3, param3),
+    JSON_OBJMAP_FN("key 4",  func4, param4),
+    JSON_OBJMAP_FN("key 5",  func5, param5)
+  };
+
+ this may be more readable than manually put values to objmap struct.
+ */
+
+#define JSON_OBJMAP_FN(KEY, FUN, PARAM) \
+  {\
+    .object    = NULL, \
+    .key       = KEY,\
+    .foundFunc = {FUN, PARAM} \
+  }
+
+#define JSON_OBJMAP_OBJ(KEY, USERDATA) \
+  {\
+    .object    = NULL, \
+    .key       = KEY, \
+    .userdata  = USERDATA \
+  }
+
 typedef void (*json_objmap_fun_t)(json_t * __restrict object,
                                   void * __restrict userdata);
 
