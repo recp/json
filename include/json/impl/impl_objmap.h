@@ -36,6 +36,9 @@ json_objmap(json_t        * __restrict obj,
           start++;
         else if (i == end - 1)
           end--;
+
+        /* duplicated keys are not allowed for now */
+        break;
       }
     }
     obj = obj->next;
