@@ -288,7 +288,7 @@ json_get(const json_t * __restrict object, const char * __restrict key) {
 JSON_INLINE
 const json_array_t*
 json_array(const json_t * __restrict object) {
-  if (object->type != JSON_ARRAY || !object->value)
+  if (object->type != JSON_ARRAY)
     return NULL;
   
   return (void *)object;
