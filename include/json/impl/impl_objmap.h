@@ -54,7 +54,7 @@ json_objmap_call(json_t        * __restrict obj,
   json_objmap_t *item;
   size_t         i;
 
-  if (obj->type != JSON_OBJECT)
+  if (!obj || obj->type != JSON_OBJECT)
     return;
 
   json_objmap(obj, objmap, count);
