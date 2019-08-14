@@ -22,9 +22,9 @@
  */
 JSON_INLINE
 void
-json_print_ex(const FILE   * __restrict ostream,
-              const json_t * __restrict json,
-              int                       opt) {
+json_print_ex(FILE   * __restrict ostream,
+              json_t * __restrict json,
+              int                 opt) {
   const json_t *parent;
   int           pad, i;
 
@@ -34,22 +34,22 @@ json_print_ex(const FILE   * __restrict ostream,
   while (json) {
     if (opt > 0) {
       for (i = 0; i < pad; i++)
-        printf("\t");
+        fprintf(ostream, "\t");
 
       if (json->key)
-        printf("\"%.*s\": ", json->keySize, json->key);
+        fprintf(ostream, "\"%.*s\": ", json->keySize, json->key);
     } else {
       if (json->key)
-        printf("\"%.*s\":", json->keySize, json->key);
+        fprintf(ostream, "\"%.*s\":", json->keySize, json->key);
     }
 
     switch (json->type) {
       case JSON_OBJECT:
         if (json->value) {
           if (opt > 0)
-            printf("{\n");
+            fprintf(ostream, "{\n");
           else
-            printf("{");
+            fprintf(ostream, "{");
 
           pad++;
 
@@ -60,24 +60,24 @@ json_print_ex(const FILE   * __restrict ostream,
         break;
 
       case JSON_STRING:
-        printf("\"%.*s\"", json->valSize, json_string(json));
+        fprintf(ostream, "\"%.*s\"", json->valSize, json_string(json));
 
         if (json->next)
-          printf(",");
+          fprintf(ostream, ",");
 
         if (opt > 0)
-          printf("\n");
+          fprintf(ostream, "\n");
         break;
 
       case JSON_ARRAY:
         if (json->value) {
           if (opt > 0) {
             if (opt > 1)
-              printf("(%d) [\n", ((json_array_t *)json)->count);
+              fprintf(ostream, "(%d) [\n", ((json_array_t *)json)->count);
             else
-              printf("[\n");
+              fprintf(ostream, "[\n");
           } else {
-            printf("[");
+            fprintf(ostream, "[");
           }
 
           pad++;
@@ -99,19 +99,19 @@ json_print_ex(const FILE   * __restrict ostream,
 
         if (opt > 0) {
           for (i = 0; i < pad; i++)
-            printf("\t");
+            fprintf(ostream, "\t");
         }
 
         if (parent->type == JSON_OBJECT)
-          printf("}");
+          fprintf(ostream, "}");
         else if (parent->type == JSON_ARRAY)
-          printf("]");
+          fprintf(ostream, "]");
 
         if (parent->next)
-          printf(",");
+          fprintf(ostream, ",");
 
         if (opt > 0)
-          printf("\n");
+          fprintf(ostream, "\n");
 
         json   = parent->next;
         parent = parent->parent;
@@ -130,8 +130,8 @@ json_print_ex(const FILE   * __restrict ostream,
  */
 JSON_INLINE
 void
-json_print_pretty(const FILE   * __restrict ostream,
-                  const json_t * __restrict json) {
+json_print_pretty(FILE   * __restrict ostream,
+                  json_t * __restrict json) {
   json_print_ex(ostream, json, 1);
 }
 
@@ -143,8 +143,8 @@ json_print_pretty(const FILE   * __restrict ostream,
  */
 JSON_INLINE
 void
-json_print_human(const FILE   * __restrict ostream,
-                 const json_t * __restrict json) {
+json_print_human(FILE   * __restrict ostream,
+                 json_t * __restrict json) {
   printf("json ( %p ):\n", json);
   json_print_ex(ostream, json, 2);
   printf("\n");
@@ -158,8 +158,8 @@ json_print_human(const FILE   * __restrict ostream,
  */
 JSON_INLINE
 void
-json_print_uglify(const FILE   * __restrict ostream,
-                  const json_t * __restrict json) {
+json_print_uglify(FILE   * __restrict ostream,
+                  json_t * __restrict json) {
   json_print_ex(ostream, json, 0);
 }
 
