@@ -145,9 +145,9 @@ JSON_INLINE
 void
 json_print_human(FILE   * __restrict ostream,
                  json_t * __restrict json) {
-  printf("json ( %p ):\n", (void *)json);
+  fprintf(ostream, "json ( %p ):\n", (void *)json);
   json_print_ex(ostream, json, 2);
-  printf("\n");
+  fprintf(ostream, "\n");
 }
 
 /*!
