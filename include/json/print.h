@@ -45,17 +45,19 @@ json_print_ex(FILE   * __restrict ostream,
 
     switch (json->type) {
       case JSON_OBJECT:
-        if (json->value) {
-          if (opt > 0)
-            fprintf(ostream, "{\n");
-          else
-            fprintf(ostream, "{");
+        if (opt > 0)
+          fprintf(ostream, "{\n");
+        else
+          fprintf(ostream, "{");
 
+        if (json->value) {
           pad++;
 
           /* parent = json; */
           json = json->value;
           continue;
+        } else {
+          fprintf(ostream, "}");
         }
         break;
 
@@ -70,21 +72,23 @@ json_print_ex(FILE   * __restrict ostream,
         break;
 
       case JSON_ARRAY:
-        if (json->value) {
-          if (opt > 0) {
-            if (opt > 1)
-              fprintf(ostream, "(%d) [\n", ((json_array_t *)json)->count);
-            else
-              fprintf(ostream, "[\n");
-          } else {
-            fprintf(ostream, "[");
-          }
+        if (opt > 0) {
+          if (opt > 1)
+            fprintf(ostream, "(%d) [\n", ((json_array_t *)json)->count);
+          else
+            fprintf(ostream, "[\n");
+        } else {
+          fprintf(ostream, "[");
+        }
 
+        if (json->value) {
           pad++;
 
           /* parent = json; */
           json = json->value;
           continue;
+        } else {
+          fprintf(ostream, "]");
         }
         break;
       default:
