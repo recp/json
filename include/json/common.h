@@ -48,7 +48,7 @@ typedef struct json_t {
   struct json_t *parent;
   struct json_t *next;
   const char    *key;
-  void          *value;
+  struct json_t *value;
   int            valSize;
   int            keySize;
   json_type_t    type;
@@ -60,9 +60,9 @@ typedef struct json_array_t {
 } json_array_t;
 
 typedef struct json_doc_t {
-  void         *memroot;
-  const json_t *root;
-  const char   *ptr;
+  void       *memroot;
+  json_t     *root;
+  const char *ptr;
 } json_doc_t;
 
 #endif /* json_common_h */
