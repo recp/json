@@ -74,7 +74,7 @@ json_print_ex(FILE   * __restrict ostream,
       case JSON_ARRAY:
         if (opt > 0) {
           if (opt > 1)
-            fprintf(ostream, "(%d) [\n", ((json_array_t *)json)->count);
+            fprintf(ostream, "(%d) [\n", json_count(json));
           else
             fprintf(ostream, "[\n");
         } else {

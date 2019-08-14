@@ -295,6 +295,17 @@ json_array(const json_t * __restrict object) {
 }
 
 JSON_INLINE
+int
+json_count(const json_t * __restrict object) {
+  const json_array_t *arr;
+
+  if ((arr = json_array(object)))
+    return arr->count;
+
+  return 0;
+}
+
+JSON_INLINE
 bool
 json_is_array(const json_t * __restrict object) {
   return object->type == JSON_ARRAY;

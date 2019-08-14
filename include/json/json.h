@@ -74,6 +74,10 @@ const json_array_t*
 json_array(const json_t * __restrict object);
 
 JSON_INLINE
+int
+json_count(const json_t * __restrict object);
+
+JSON_INLINE
 bool
 json_is_array(const json_t * __restrict object);
 
