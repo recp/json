@@ -198,7 +198,7 @@ json_key_eq(const json_t * __restrict obj, const char * __restrict str) {
  * @return returns parent object if available
  */
 JSON_INLINE
-const json_t*
+json_t*
 json_parent(const json_t * __restrict obj) {
   /*
   const json_t *prev;

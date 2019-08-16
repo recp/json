@@ -60,7 +60,7 @@ json_free(json_doc_t * __restrict jsondoc);
  * @return value found for the key or NULL
  */
 JSON_INLINE
-const json_t*
+json_t*
 json_get(const json_t * __restrict object, const char * __restrict key);
 
 /*!
@@ -70,7 +70,7 @@ json_get(const json_t * __restrict object, const char * __restrict key);
  * @return json array or NULL
  */
 JSON_INLINE
-const json_array_t*
+json_array_t*
 json_array(const json_t * __restrict object);
 
 JSON_INLINE

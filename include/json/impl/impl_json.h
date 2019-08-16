@@ -270,10 +270,10 @@ json_free(json_doc_t * __restrict jsondoc) {
 }
 
 JSON_INLINE
-const json_t*
+json_t*
 json_get(const json_t * __restrict object, const char * __restrict key) {
-  const json_t *iter;
-  size_t        keysize;
+  json_t *iter;
+  size_t  keysize;
   
   if (!object || !key || !(iter = object->value))
     return NULL;
@@ -286,7 +286,7 @@ json_get(const json_t * __restrict object, const char * __restrict key) {
 }
 
 JSON_INLINE
-const json_array_t*
+json_array_t*
 json_array(const json_t * __restrict object) {
   if (object->type != JSON_ARRAY)
     return NULL;
