@@ -22,7 +22,7 @@
 JSON_INLINE
 int32_t
 json_int32(const json_t * __restrict object, int32_t defaultValue) {
-  if (object->type != JSON_STRING || !object->value)
+  if (!object || object->type != JSON_STRING || !object->value)
     return defaultValue;
 
   return (int32_t)strtol(object->value, NULL, 10);
@@ -38,7 +38,7 @@ json_int32(const json_t * __restrict object, int32_t defaultValue) {
 JSON_INLINE
 uint32_t
 json_uint32(const json_t * __restrict object, uint32_t defaultValue) {
-  if (object->type != JSON_STRING || !object->value)
+  if (!object || object->type != JSON_STRING || !object->value)
     return defaultValue;
 
   return (uint32_t)strtoul(object->value, NULL, 10);
@@ -54,7 +54,7 @@ json_uint32(const json_t * __restrict object, uint32_t defaultValue) {
 JSON_INLINE
 int64_t
 json_int64(const json_t * __restrict object, int64_t defaultValue) {
-  if (object->type != JSON_STRING || !object->value)
+  if (!object || object->type != JSON_STRING || !object->value)
     return defaultValue;
 
   return strtoll(object->value, NULL, 10);
@@ -70,7 +70,7 @@ json_int64(const json_t * __restrict object, int64_t defaultValue) {
 JSON_INLINE
 uint64_t
 json_uint64(const json_t * __restrict object, uint64_t defaultValue) {
-  if (object->type != JSON_STRING || !object->value)
+  if (!object || object->type != JSON_STRING || !object->value)
     return defaultValue;
 
   return strtoull(object->value, NULL, 10);
@@ -86,7 +86,7 @@ json_uint64(const json_t * __restrict object, uint64_t defaultValue) {
 JSON_INLINE
 float
 json_float(const json_t * __restrict object, float defaultValue) {
-  if (object->type != JSON_STRING || !object->value)
+  if (!object || object->type != JSON_STRING || !object->value)
     return defaultValue;
 
   return strtof(object->value, NULL);
@@ -102,7 +102,7 @@ json_float(const json_t * __restrict object, float defaultValue) {
 JSON_INLINE
 double
 json_double(const json_t * __restrict object, double defaultValue) {
-  if (object->type != JSON_STRING || !object->value)
+  if (!object || object->type != JSON_STRING || !object->value)
     return defaultValue;
 
   return strtod(object->value, NULL);
@@ -121,7 +121,7 @@ json_bool(const json_t * __restrict object, int defaultValue) {
   const char *boolString;
   char        first;
 
-  if (object->type != JSON_STRING || !(boolString = object->value))
+  if (!object || object->type != JSON_STRING || !(boolString = object->value))
     return defaultValue;
 
   first = boolString[0];
