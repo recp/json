@@ -81,6 +81,14 @@ JSON_INLINE
 bool
 json_is_array(const json_t * __restrict object);
 
+JSON_INLINE
+void
+json_array_float(float        * __restrict dest,
+                 const json_t * __restrict object,
+                 float                     defaultValue,
+                 int                       maxLength,
+                 bool                      sourceIsReversed);
+
 #include "impl/impl_json.h"
 #include "objmap.h"
 

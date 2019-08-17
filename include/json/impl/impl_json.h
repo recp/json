@@ -311,4 +311,44 @@ json_is_array(const json_t * __restrict object) {
   return object->type == JSON_ARRAY;
 }
 
+JSON_INLINE
+void
+json_array_float(float        * __restrict dest,
+                 const json_t * __restrict object,
+                 float                     defaultValue,
+                 int                       maxLength,
+                 bool                      sourceIsReversed) {
+  json_array_t *arr;
+  json_t       *item;
+  int           count, i;
+
+  if (!(arr = json_array(object)))
+    return;
+
+  count = arr->count;
+  item  = arr->base.value;
+
+  if (maxLength > 0 && count > maxLength)
+    count = maxLength;
+
+  if (sourceIsReversed) {
+    while (item) {
+      if (count <= 0)
+        break;
+
+      dest[--count] = json_float(item, 0.0f);
+      item          = item->next;
+    }
+  } else {
+    i = 0;
+    while (item) {
+      if (i >= count)
+        break;
+
+      dest[i++] = json_float(item, 0.0f);
+      item      = item->next;
+    }
+  }
+}
+
 #endif /* json_impl_json_h */
