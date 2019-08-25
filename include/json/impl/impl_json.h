@@ -316,7 +316,7 @@ void
 json_array_float(float        * __restrict dest,
                  const json_t * __restrict object,
                  float                     defaultValue,
-                 int                       maxLength,
+                 int                       maxCount,
                  bool                      sourceIsReversed) {
   json_array_t *arr;
   json_t       *item;
@@ -328,8 +328,8 @@ json_array_float(float        * __restrict dest,
   count = arr->count;
   item  = arr->base.value;
 
-  if (maxLength > 0 && count > maxLength)
-    count = maxLength;
+  if (maxCount > 0 && count > maxCount)
+    count = maxCount;
 
   if (sourceIsReversed) {
     while (item) {

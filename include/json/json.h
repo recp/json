@@ -73,20 +73,47 @@ JSON_INLINE
 json_array_t*
 json_array(const json_t * __restrict object);
 
+/*!
+ * @brief returns count of array's items
+ *
+ * @param[in] object json object
+ * @return count
+ */
 JSON_INLINE
 int
 json_count(const json_t * __restrict object);
 
+/*!
+ * @brief returns true if object is array
+ *
+ * @param[in] object json object
+ * @return true if object is array otherwise false
+ */
 JSON_INLINE
 bool
 json_is_array(const json_t * __restrict object);
 
+/*!
+ * @brief fill float array
+ *
+ * if you know item is float array, you don't need to iterate manulally.
+ * with maxCount you can trim array from start, for instance if array is vec4
+ * and you want to get vec3, then if you set maxCount as 3, you will only get
+ * first 3 items of array
+ *
+ * @param[in] dest              destination float array
+ * @param[in] object            json object
+ * @param[in] defaultValue      defult value if item is not float
+ * @param[in] maxCount          max count to read, 0 to read all
+ * @param[in] sourceIsReversed  source is reversed; true if you pass true to
+ *                              json_parse's reverse parameter
+ */
 JSON_INLINE
 void
 json_array_float(float        * __restrict dest,
                  const json_t * __restrict object,
                  float                     defaultValue,
-                 int                       maxLength,
+                 int                       maxCount,
                  bool                      sourceIsReversed);
 
 #include "impl/impl_json.h"
