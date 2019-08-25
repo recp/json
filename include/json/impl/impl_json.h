@@ -336,7 +336,7 @@ json_array_float(float        * __restrict dest,
       if (count <= 0)
         break;
 
-      dest[--count] = json_float(item, 0.0f);
+      dest[--count] = json_float(item, defaultValue);
       item          = item->next;
     }
   } else {
@@ -345,7 +345,7 @@ json_array_float(float        * __restrict dest,
       if (i >= count)
         break;
 
-      dest[i++] = json_float(item, 0.0f);
+      dest[i++] = json_float(item, defaultValue);
       item      = item->next;
     }
   }
