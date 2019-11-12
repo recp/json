@@ -188,7 +188,31 @@ json_string_dup(const json_t * __restrict object) {
 JSON_INLINE
 bool
 json_key_eq(const json_t * __restrict obj, const char * __restrict str) {
-  return strncmp(str, obj->key, obj->keySize) == 0;
+  size_t strsize;
+    
+  if ((strsize = strlen(str)) != obj->keySize)
+    return false;
+
+  return strncmp(str, obj->key, strsize) == 0;
+}
+
+/*!
+ * @brief compares json key with a string
+ *
+ * @param[in] obj     json object
+ * @param[in] str     string to compare
+ * @param[in] strsize size of string to compare
+ * @return true if str is equals to json's key
+ */
+JSON_INLINE
+bool
+json_key_eqsz(const json_t * __restrict obj,
+              const char   * __restrict str,
+              size_t                    strsize) {
+  if (strsize != obj->keySize)
+    return false;
+
+  return strncmp(str, obj->key, strsize) == 0;
 }
 
 /*!
