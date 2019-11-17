@@ -243,7 +243,7 @@ json_val_eq(const json_t * __restrict obj, const char * __restrict str) {
  */
 JSON_INLINE
 bool
-json_key_eqsz(const json_t * __restrict obj,
+json_val_eqsz(const json_t * __restrict obj,
               const char   * __restrict str,
               size_t                    strsize) {
   if (strsize != (size_t)obj->valSize)
