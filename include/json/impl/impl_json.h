@@ -105,7 +105,7 @@ json_parse(const char * __restrict contents, bool reverse) {
   keysize        = 0;
   lookingForKey  = false;
 
-  ((json_mem_t *)doc->memroot)->capacity = sizeof(json_mem_t) + JSON_MEM_PAGE;
+  ((json_mem_t *)doc->memroot)->capacity = JSON_MEM_PAGE;
 
   do {
   again:
