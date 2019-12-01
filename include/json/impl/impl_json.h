@@ -224,7 +224,8 @@ json_parse(const char * __restrict contents, bool reverse) {
             }
 
             /* skip trailing quote */
-            c = *++p;
+            /* c = *++p; */
+            ++p;
           } else {
             while (c != ',' && c != '{' && c != '}' && c != '[' && c != ']') {
               if (c == '\0')
