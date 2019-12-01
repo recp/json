@@ -349,6 +349,10 @@ json_array_float(float        * __restrict dest,
       dest[--count] = json_float(item, defaultValue);
       item          = item->next;
     }
+    
+    while (count) {
+      dest[--count] = defaultValue;
+    }
   } else {
     i = 0;
     while (item) {
@@ -359,10 +363,10 @@ json_array_float(float        * __restrict dest,
       item      = item->next;
     }
     
-    if (desiredCount > count) {
-       for (i = count; i < desiredCount; i++)
-         dest[i] = defaultValue;
-     }
+    if (i != desiredCount) {
+      for (; i < desiredCount; i++)
+        dest[i] = defaultValue;
+    }
   }
 }
 
