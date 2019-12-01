@@ -12,89 +12,22 @@
 #include "impl_mem.h"
 
 JSON_INLINE
-const void*
-json__impl_key(const char ** __restrict ptr, int * __restrict keysize) {
-  const char *pi, *end, *start;
-  char        c;
-
-  pi = *ptr;
-  c  = *pi;
-
-  while (c == '\"' || c == '\'' || c == ' ' || c == ',')
-    c = *++pi;
-
-  start = end = pi;
-
-  while (c != ':' && c != '\"' && c != '\'' && c != '\0') {
-    if (c != ' '
-        && c != '\r'
-        && c != '\n'
-        && c != '\t')
-      end = pi + 1;
-  
-    c = *++pi;
-  }
-
-  *keysize = (int)(end - start);
-  *ptr     = pi;
-
-  return start;
-}
-
-JSON_INLINE
-void*
-json__impl_value(const char ** __restrict ptr, int * __restrict valuesize) {
-  const char *pi, *end, *start;
-  char        c;
-
-  pi  = *ptr;
-  c   = *pi;
-
-  while (c == ':' || c == '\"' || c == '\'' || c == ' ')
-    c = *++pi;
-
-  start = end = pi;
-
-  while (c != '\"'
-         && c != '\''
-         && c != ','
-         && c != '{'
-         && c != '}'
-         && c != '['
-         && c != ']'
-         && c != '\0') {
-    if (c != ' '
-        && c != '\r'
-        && c != '\n'
-        && c != '\t')
-      end = pi + 1;
-    
-    c = *++pi;
-  }
-
-  *valuesize = (int)(end - start);
-  *ptr       = pi;
-
-  return (void *)start;
-}
-
-JSON_INLINE
 json_doc_t*
 json_parse(const char * __restrict contents, bool reverse) {
   json_doc_t *doc;
   json_t     *obj, *val, *parent;
-  const char *key;
+  const char *key, *p, *end;
   json_t      tmproot;
   int         keysize;
-  char        c;
-  bool        lookingForKey;
+  char        c, quote;
+  bool        lookingForKey, foundQuote;
 
   if (!contents || (c = *contents) == '\0')
     return NULL;
 
   doc            = calloc(1, sizeof(*doc));
   doc->memroot   = calloc(1, sizeof(json_mem_t) + JSON_MEM_PAGE);
-  doc->ptr       = contents;
+  p              = contents;
 
   memset(&tmproot, 0, sizeof(tmproot));
   tmproot.type   = JSON_OBJECT;
@@ -106,18 +39,18 @@ json_parse(const char * __restrict contents, bool reverse) {
   lookingForKey  = false;
 
   ((json_mem_t *)doc->memroot)->capacity = JSON_MEM_PAGE;
+  
+  quote = '"';
 
   do {
   again:
     /* child */
     switch (c) {
-        /* trim */
+      /* trim */
       case ' ':
       case '\r':
       case '\n':
       case '\t':
-      case '\'':
-      case '"':
         break;
       case '{':
       case '[': {
@@ -178,35 +111,59 @@ json_parse(const char * __restrict contents, bool reverse) {
         lookingForKey = obj->type == JSON_OBJECT;
         break;
       }
+      case ':': {
+        c = *++p;
+        break;
+      }
       default: {
         /* looking for key */
         if (lookingForKey) {
-          key = json__impl_key(&doc->ptr, &keysize);
-          if (key == NULL || ((c = *key) == '\0'))
+          if ((foundQuote = (c == '"' || c == '\'' || c == '`'))) {
+            quote = c;
+            c     = *++p;
+          }
+          
+          key = end = p;
+
+          if (foundQuote) {
+            while (c != quote) {
+              if (c == '\0')
+                goto err;
+
+              /* espace */
+              if (c != '\\') {
+                if (c != ' ' && c != '\r' && c != '\n' && c != '\t')
+                  end = p + 1;
+              } else {
+                c = *++p;
+              }
+
+              c = *++p;
+            }
+
+            /* skip trailing quote */
+            c = *++p;
+          } else {
+            while (c != ':') {
+              if (c == '\0')
+                goto err;
+              
+              if (c != ' ' && c != '\r'  && c != '\n' && c != '\t')
+                end = p + 1;
+              
+              c = *++p;
+            }
+            
+            /* skip trailing column */
+            c = *++p;
+          }
+
+          keysize = (int)(end - key);
+
+          if (key == NULL || c  == '\0')
             goto err;
 
           lookingForKey = false;
-          c             = *doc->ptr;
-
-          /* jump to value */
-          for (;;) {
-            switch (c) {
-              case ' ':
-              case '\t':
-              case '\n':
-              case '\r':
-              case '"':
-              case '\'':
-              case ':':
-                c = *++doc->ptr;
-                continue;
-              default:
-                goto val;
-            }
-          }
-
-        val:
-          goto again;
         }
 
         /* looking for value */
@@ -236,15 +193,53 @@ json_parse(const char * __restrict contents, bool reverse) {
             val->keySize = keysize;
             key          = NULL;
           }
+          
+          if ((foundQuote = (c == '"' || c == '\'' || c == '`'))) {
+            quote = c;
+            c     = *++p;
+          }
 
-          val->value = json__impl_value(&doc->ptr, &val->valSize);
-          c          = *doc->ptr;
+          end        = p;
+          val->value = (void *)end;
+
+          if (foundQuote) {
+            while (c != quote) {
+              if (c == '\0')
+                goto err;
+
+              /* espace */
+              if (c != '\\') {
+                if (c != ' ' && c != '\r' && c != '\n' && c != '\t')
+                  end = p + 1;
+              } else {
+                c = *++p;
+              }
+
+              c = *++p;
+            }
+
+            /* skip trailing quote */
+            c = *++p;
+          } else {
+            while (c != ',' && c != '{' && c != '}' && c != '[' && c != ']') {
+              if (c == '\0')
+                goto err;
+
+              if (c != ' ' && c != '\r'  && c != '\n' && c != '\t')
+                end = p + 1;
+
+              c = *++p;
+            }
+          }
+          
+          val->valSize = (int)(end - (char *)val->value);
+          c            = *p;
 
           goto again;
         } /* if lookingForKey */
       } /* switch->default */
     } /* switch */
-  } while ((c = *doc->ptr) != '\0' && (c = *++doc->ptr) != '\0');
+  } while ((c = *p) != '\0' && (c = *++p) != '\0');
 
 err:
   if (tmproot.value)
