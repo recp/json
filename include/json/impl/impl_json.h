@@ -322,8 +322,13 @@ json_array_float(float        * __restrict dest,
   json_t       *item;
   int           count, i;
 
-  if (!(arr = json_array(object)))
+  /* fill the array with default value if object is not an array */
+  if (!(arr = json_array(object))) {
+    for (i = 0; i < maxCount; i++) {
+      dest[i] = defaultValue;
+    }
     return;
+  }
 
   count = arr->count;
   item  = arr->base.value;
