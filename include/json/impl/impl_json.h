@@ -320,7 +320,7 @@ json_array_float(float        * __restrict dest,
                  bool                      sourceIsReversed) {
   json_array_t *arr;
   json_t       *item;
-  int           count, i, diff;
+  int           count, i;
 
   /* fill the array with default value if object is not an array */
   if (!(arr = json_array(object))) {
@@ -331,7 +331,6 @@ json_array_float(float        * __restrict dest,
 
   count = arr->count;
   item  = arr->base.value;
-  diff  = abs(desiredCount - count);
   
   if (desiredCount > 0 && count > desiredCount)
     count = desiredCount;
@@ -350,9 +349,8 @@ json_array_float(float        * __restrict dest,
       item          = item->next;
     }
     
-    while (count) {
+    while (count)
       dest[--count] = defaultValue;
-    }
   } else {
     i = 0;
     while (item) {
