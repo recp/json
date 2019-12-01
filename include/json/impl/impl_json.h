@@ -316,27 +316,32 @@ void
 json_array_float(float        * __restrict dest,
                  const json_t * __restrict object,
                  float                     defaultValue,
-                 int                       maxCount,
+                 int                       desiredCount,
                  bool                      sourceIsReversed) {
   json_array_t *arr;
   json_t       *item;
-  int           count, i;
+  int           count, i, diff;
 
   /* fill the array with default value if object is not an array */
   if (!(arr = json_array(object))) {
-    for (i = 0; i < maxCount; i++) {
+    for (i = 0; i < desiredCount; i++)
       dest[i] = defaultValue;
-    }
     return;
   }
 
   count = arr->count;
   item  = arr->base.value;
-
-  if (maxCount > 0 && count > maxCount)
-    count = maxCount;
+  diff  = abs(desiredCount - count);
+  
+  if (desiredCount > 0 && count > desiredCount)
+    count = desiredCount;
 
   if (sourceIsReversed) {
+    if (desiredCount > count) {
+      for (i = desiredCount - 1; i >= 0; i--)
+        dest[i] = defaultValue;
+    }
+
     while (item) {
       if (count <= 0)
         break;
@@ -353,6 +358,11 @@ json_array_float(float        * __restrict dest,
       dest[i++] = json_float(item, defaultValue);
       item      = item->next;
     }
+    
+    if (desiredCount > count) {
+       for (i = count; i < desiredCount; i++)
+         dest[i] = defaultValue;
+     }
   }
 }
 
