@@ -112,7 +112,8 @@ json_parse(const char * __restrict contents, bool reverse) {
         break;
       }
       case ':': {
-        c = *++p;
+        /* c = *++p; */
+        ++p;
         break;
       }
       default: {
@@ -135,14 +136,16 @@ json_parse(const char * __restrict contents, bool reverse) {
                 if (c != ' ' && c != '\r' && c != '\n' && c != '\t')
                   end = p + 1;
               } else {
-                c = *++p;
+                /* c = *++p; */
+                ++p;
               }
 
               c = *++p;
             }
 
             /* skip trailing quote */
-            c = *++p;
+            /* c = *++p; */
+            ++p;
           } else {
             while (c != ':') {
               if (c == '\0')
@@ -155,7 +158,8 @@ json_parse(const char * __restrict contents, bool reverse) {
             }
             
             /* skip trailing column */
-            c = *++p;
+            /* c = *++p; */
+            ++p;
           }
 
           keysize = (int)(end - key);
@@ -212,7 +216,8 @@ json_parse(const char * __restrict contents, bool reverse) {
                 if (c != ' ' && c != '\r' && c != '\n' && c != '\t')
                   end = p + 1;
               } else {
-                c = *++p;
+                /* c = *++p; */
+                ++p;
               }
 
               c = *++p;
@@ -225,7 +230,7 @@ json_parse(const char * __restrict contents, bool reverse) {
               if (c == '\0')
                 goto err;
 
-              if (c != ' ' && c != '\r'  && c != '\n' && c != '\t')
+              if (c != ' ' && c != '\r' && c != '\n' && c != '\t')
                 end = p + 1;
 
               c = *++p;
