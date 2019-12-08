@@ -37,10 +37,10 @@ json_print_ex(FILE   * __restrict ostream,
         fprintf(ostream, "\t");
 
       if (json->key)
-        fprintf(ostream, "\"%.*s\": ", json->keySize, json->key);
+        fprintf(ostream, "\"%.*s\": ", json->keysize, json->key);
     } else {
       if (json->key)
-        fprintf(ostream, "\"%.*s\":", json->keySize, json->key);
+        fprintf(ostream, "\"%.*s\":", json->keysize, json->key);
     }
 
     switch (json->type) {
@@ -62,7 +62,10 @@ json_print_ex(FILE   * __restrict ostream,
         break;
 
       case JSON_STRING:
-        fprintf(ostream, "\"%.*s\"", json->valSize, json_string(json));
+        if (json->value)
+          fprintf(ostream, "\"%.*s\"", json->valsize, json_string(json));
+        else
+          fprintf(ostream, "null");
 
         if (json->next)
           fprintf(ostream, ",");

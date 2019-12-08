@@ -85,7 +85,7 @@ json_parse(const char * __restrict contents, bool reverse) {
 
         if (key) {
           obj->key     = key;
-          obj->keySize = keysize;
+          obj->keysize = keysize;
           key          = NULL;
         }
 
@@ -194,7 +194,7 @@ json_parse(const char * __restrict contents, bool reverse) {
 
           if (key) {
             val->key     = key;
-            val->keySize = keysize;
+            val->keysize = keysize;
             key          = NULL;
           }
           
@@ -237,9 +237,22 @@ json_parse(const char * __restrict contents, bool reverse) {
               c = *++p;
             }
           }
+
+          val->valsize = (int)(end - (char *)val->value);
+
+          if (!foundQuote && val->valsize == 4) {
+            char *n;
+
+            /* check if it is null */
+            n = val->value;
+
+            if (n[0] == 'n' && n[1] == 'u' && n[2] == 'l' && n[3] == 'l') {
+              val->value   = NULL;
+              val->valsize = 0;
+            }
+          }
           
-          val->valSize = (int)(end - (char *)val->value);
-          c            = *p;
+          c = *p;
 
           goto again;
         } /* if lookingForKey */

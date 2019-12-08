@@ -171,9 +171,9 @@ char*
 json_string_dup(const json_t * __restrict object) {
   char *s;
 
-  s = malloc(object->valSize + 1);
-  memcpy(s, object->value, object->valSize);
-  s[object->valSize] = '\0';
+  s = malloc(object->valsize + 1);
+  memcpy(s, object->value, object->valsize);
+  s[object->valsize] = '\0';
 
   return s;
 }
@@ -190,7 +190,7 @@ bool
 json_key_eq(const json_t * __restrict obj, const char * __restrict str) {
   size_t strsize;
     
-  if ((strsize = strlen(str)) != (size_t)obj->keySize)
+  if ((strsize = strlen(str)) != (size_t)obj->keysize)
     return false;
 
   return strncmp(str, obj->key, strsize) == 0;
@@ -209,7 +209,7 @@ bool
 json_key_eqsz(const json_t * __restrict obj,
               const char   * __restrict str,
               size_t                    strsize) {
-  if (strsize != (size_t)obj->keySize)
+  if (strsize != (size_t)obj->keysize)
     return false;
 
   return strncmp(str, obj->key, strsize) == 0;
@@ -227,7 +227,7 @@ bool
 json_val_eq(const json_t * __restrict obj, const char * __restrict str) {
   size_t strsize;
     
-  if ((strsize = strlen(str)) != (size_t)obj->valSize)
+  if ((strsize = strlen(str)) != (size_t)obj->valsize)
     return false;
 
   return strncmp(str, obj->value, strsize) == 0;
@@ -246,7 +246,7 @@ bool
 json_val_eqsz(const json_t * __restrict obj,
               const char   * __restrict str,
               size_t                    strsize) {
-  if (strsize != (size_t)obj->valSize)
+  if (strsize != (size_t)obj->valsize)
     return false;
 
   return strncmp(str, obj->value, strsize) == 0;
