@@ -261,8 +261,10 @@ json_parse(const char * __restrict contents, bool reverse) {
   } while ((c = *p) != '\0' && (c = *++p) != '\0');
 
 err:
-  if (tmproot.value)
+  if (tmproot.value) {
     ((json_t *)tmproot.value)->parent = NULL;
+    ((json_t *)tmproot.value)->next   = NULL;
+  }
 
   doc->root = tmproot.value;
   return doc;
