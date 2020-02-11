@@ -10,6 +10,6 @@
 
 #define JSON_VERSION_MAJOR 0
 #define JSON_VERSION_MINOR 1
-#define JSON_VERSION_PATCH 3
+#define JSON_VERSION_PATCH 4
 
 #endif /* json_version_h */
