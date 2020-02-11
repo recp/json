@@ -24,22 +24,22 @@
  this may be more readable than manually put values to objmap struct.
  */
 
-#define JSON_OBJMAP_FN(KEY, FUN, PARAM) \
-  {\
-    .object       = NULL, \
-    .key          = KEY,\
-    .foundFunc    = {FUN, PARAM}, \
-    .notFoundFunc = {NULL, NULL}, \
-    .userdata     = NULL \
+#define JSON_OBJMAP_FN(KEY, FUN, PARAM)                                       \
+  {                                                                           \
+    .object       = NULL,                                                     \
+    .key          = KEY,                                                      \
+    .foundFunc    = {FUN, PARAM},                                             \
+    .notFoundFunc = {NULL, NULL},                                             \
+    .userdata     = NULL                                                      \
   }
 
-#define JSON_OBJMAP_OBJ(KEY, USERDATA) \
-  {\
-    .object       = NULL, \
-    .key          = KEY, \
-    .foundFunc    = {NULL, NULL}, \
-    .notFoundFunc = {NULL, NULL}, \
-    .userdata     = USERDATA \
+#define JSON_OBJMAP_OBJ(KEY, USERDATA)                                        \
+  {                                                                           \
+    .object       = NULL,                                                     \
+    .key          = KEY,                                                      \
+    .foundFunc    = {NULL, NULL},                                             \
+    .notFoundFunc = {NULL, NULL},                                             \
+    .userdata     = USERDATA                                                  \
   }
 
 typedef void (*json_objmap_fun_t)(json_t * __restrict object,
@@ -51,11 +51,11 @@ typedef struct json_func_t {
 } json_func_t;
 
 typedef struct json_objmap_t {
-  json_t      *object; /* found json object */
-  const char  *key;
-  void        *userdata;
-  json_func_t  foundFunc;
-  json_func_t  notFoundFunc;
+  json_t     *object; /* found json object */
+  const char *key;
+  void       *userdata;
+  json_func_t foundFunc;
+  json_func_t notFoundFunc;
 } json_objmap_t;
 
 JSON_INLINE
