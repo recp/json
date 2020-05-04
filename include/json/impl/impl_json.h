@@ -304,7 +304,7 @@ json_get(const json_t * __restrict object, const char * __restrict key) {
 JSON_INLINE
 json_array_t*
 json_array(const json_t * __restrict object) {
-  if (object->type != JSON_ARRAY)
+  if (!object || object->type != JSON_ARRAY)
     return NULL;
   
   return (void *)object;
@@ -324,7 +324,7 @@ json_count(const json_t * __restrict object) {
 JSON_INLINE
 bool
 json_is_array(const json_t * __restrict object) {
-  return object->type == JSON_ARRAY;
+  return object && object->type == JSON_ARRAY;
 }
 
 JSON_INLINE
