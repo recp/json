@@ -121,3 +121,4 @@ win/x85
 win/Debug
 json_test/*
 main.c
+build/
