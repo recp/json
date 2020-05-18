@@ -85,7 +85,7 @@ In this way you don't have to compare keys in a loopi just map the keys with a f
 - [x] windows build
 - [x] documentation
 - [ ] ignore comments?
-- [ ] cmake?
+- [x] cmake
 - [ ] tests
 - [ ] extra optimizations
 - [ ] usage in detail
@@ -116,9 +116,21 @@ cd win
 .\build.bat
 ```
 
-### Cmake
+##### Cmake options with Defaults:
 
-todo.
+```CMake
+option(JSON_SHARED "Shared build" ON)
+option(JSON_STATIC "Static build" OFF)
+option(JSON_USE_C99 "" OFF) # C11 
+option(JSON_USE_TEST "Enable Tests" OFF) # for make check - make test
+```
+
+```bash
+mkdir build && cd build
+cmake ..
+make
+[sudo] make install
+```
 
 ### Header-only or Compiled Library
 
