@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.8.2)
-project(json VERSION 0.1.4 LANGUAGES C)
+project(json VERSION 0.1.5 LANGUAGES C)
 
-set(C_STANDARD 11)
-set(C_STANDARD_REQUIRED YES)
+set(CMAKE_C_STANDARD 11)
+set(DEFAULT_BUILD_TYPE "Release")
 
 set(JSON_BUILD)
 option(JSON_SHARED "Shared build" ON)
@@ -16,49 +16,50 @@ else(JSON_STATIC)
 endif()
 
 if(JSON_USE_C99)
-  set(C_STANDARD 99)
+  set(CMAKE_C_STANDARD 99)
 endif()
 
 if(MSVC)
 	add_definitions(-D_WINDOWS -D_USRDLL -DJSON_EXPORTS -DJSON_DLL)
-	add_compile_options("/W3" "/Ox" "/Gy" "/Oi" "/TC" "/analyze")
+	add_compile_options(/W3 /Ox /Gy /Oi /TC)
 else()
-  add_compile_options("-Wall" "-Werror" "-std=gnu11" "-O3")
+  add_compile_options(-Wall -Werror -O3 -fstrict-aliasing)
 endif()
 
-add_library(json
-  ${JSON_BUILD}
-  src/json.c
-)
-
-set_target_properties(json PROPERTIES 
-                              VERSION ${PROJECT_VERSION}
-                            SOVERSION ${PROJECT_VERSION_MAJOR})
-
-target_include_directories(json PUBLIC
-  ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
-
-install(
-	TARGETS	json
-	EXPORT json
-	ARCHIVE DESTINATION lib/ COMPONENT development
-	LIBRARY DESTINATION lib/ COMPONENT runtime
-	RUNTIME DESTINATION ${CMAKE_INSTALL_NAME_DIR} COMPONENT runtime
-)
-
-if(JSON_SHARED)
-	install(
-		TARGETS	json
-		EXPORT json
-		LIBRARY DESTINATION include/ COMPONENT development 
-	)
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  message(STATUS "Setting build type to '${DEFAULT_BUILD_TYPE}' as none was specified.")
+  set(CMAKE_BUILD_TYPE "${DEFAULT_BUILD_TYPE}" CACHE STRING "Choose the type of build." FORCE)
+  # Set the possible values of build type for cmake-gui
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 endif()
 
-INSTALL(DIRECTORY include/ DESTINATION include)
+include(GNUInstallDirs)
+
+set(CPACK_PROJECT_NAME ${PROJECT_NAME})
+set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+include(CPack)
+
+# Target Start
+add_library(json ${JSON_BUILD} src/json.c)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES 
+                             VERSION ${PROJECT_VERSION}
+                           SOVERSION ${PROJECT_VERSION_MAJOR})
+
+target_include_directories(${PROJECT_NAME} PRIVATE include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+# Install 
+install(TARGETS ${PROJECT_NAME}
+        EXPORT  ${PROJECT_NAME}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
+install(DIRECTORY include/${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        PATTERN ".*" EXCLUDE)
 
 # Test Configuration
 if(JSON_USE_TEST)
+  include(CTest)
   enable_testing()
   add_subdirectory(test)
 endif()
