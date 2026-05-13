@@ -19,7 +19,8 @@ typedef struct json_mem_t {
   char               data[];
 } json_mem_t;
 
-#define JSON_MEM_PAGE (32768 - sizeof(json_mem_t)) /* 32K */
+#define JSON_MEM_PAGE     (32768 - sizeof(json_mem_t))  /* 32K */
+#define JSON_MEM_MAX_PAGE (262144 - sizeof(json_mem_t)) /* 256K */
 
 JSON_INLINE
 void*
@@ -29,9 +30,18 @@ json__impl_calloc(json_doc_t * __restrict doc, size_t size) {
   size_t      sizeToAlloc;
   
   mem         = doc->memroot;
-  sizeToAlloc = (JSON_MEM_PAGE < size) ? size : JSON_MEM_PAGE;
+  sizeToAlloc = mem->capacity;
   
   if (mem->capacity < (mem->size + size)) {
+    if (sizeToAlloc < JSON_MEM_MAX_PAGE)
+      sizeToAlloc *= 2;
+
+    if (sizeToAlloc > JSON_MEM_MAX_PAGE)
+      sizeToAlloc = JSON_MEM_MAX_PAGE;
+
+    if (sizeToAlloc < size)
+      sizeToAlloc = size;
+
     mem           = calloc(1, sizeof(*mem) + sizeToAlloc);
     mem->capacity = sizeToAlloc;
     mem->next     = doc->memroot;

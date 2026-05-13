@@ -14,17 +14,25 @@
 JSON_INLINE
 json_doc_t*
 json_parse(const char * __restrict contents, bool reverse) {
+  return json_parse_len(contents, contents ? strlen(contents) : 0, reverse);
+}
+
+JSON_INLINE
+json_doc_t*
+json_parse_len(const char * __restrict contents, size_t len, bool reverse) {
   json_doc_t *doc;
   json_t     *obj, *val, *parent;
-  const char *key, *p, *end;
+  const char *key, *p, *end, *limit;
   json_t      tmproot;
   int         keysize;
   char        c, quote;
   bool        lookingForKey, foundQuote;
 
-  if (!contents || (c = *contents) == '\0')
+  if (!contents || len == 0)
     return NULL;
 
+  limit          = contents + len;
+  c              = *contents;
   doc            = calloc(1, sizeof(*doc));
   doc->memroot   = calloc(1, sizeof(json_mem_t) + JSON_MEM_PAGE);
   p              = contents;
@@ -51,7 +59,14 @@ json_parse(const char * __restrict contents, bool reverse) {
       case '\r':
       case '\n':
       case '\t':
-        break;
+        do {
+          p++;
+          if (p >= limit)
+            goto err;
+          c = *p;
+        } while (json__ascii_space(c));
+
+        goto again;
       case '{':
       case '[': {
         if (obj->type == JSON_ARRAY)
@@ -127,35 +142,26 @@ json_parse(const char * __restrict contents, bool reverse) {
           key = end = p;
 
           if (foundQuote) {
-            while (c != quote) {
-              if (c == '\0')
-                goto err;
+            const char *quoteEnd;
 
-              /* espace */
-              if (c != '\\') {
-                if (c != ' ' && c != '\r' && c != '\n' && c != '\t')
-                  end = p + 1;
-              } else {
-                /* c = *++p; */
-                ++p;
-              }
+            quoteEnd = json__find_quote_len(p, limit, quote);
+            if (!quoteEnd)
+              goto err;
 
-              c = *++p;
-            }
+            end = json__rtrim_ascii(p, quoteEnd);
 
             /* skip trailing quote */
-            /* c = *++p; */
-            ++p;
+            p = quoteEnd + 1;
           } else {
-            while (c != ':') {
-              if (c == '\0')
-                goto err;
-              
+            do {
               if (c != ' ' && c != '\r'  && c != '\n' && c != '\t')
                 end = p + 1;
               
-              c = *++p;
-            }
+              p++;
+              if (p >= limit)
+                goto err;
+              c = *p;
+            } while (c != ':');
             
             /* skip trailing column */
             /* c = *++p; */
@@ -164,7 +170,7 @@ json_parse(const char * __restrict contents, bool reverse) {
 
           keysize = (int)(end - key);
 
-          if (key == NULL || c  == '\0')
+          if (key == NULL)
             goto err;
 
           lookingForKey = false;
@@ -207,35 +213,28 @@ json_parse(const char * __restrict contents, bool reverse) {
           val->value = (void *)end;
 
           if (foundQuote) {
-            while (c != quote) {
-              if (c == '\0')
-                goto err;
+            const char *quoteEnd;
 
-              /* espace */
-              if (c != '\\') {
-                if (c != ' ' && c != '\r' && c != '\n' && c != '\t')
-                  end = p + 1;
-              } else {
-                /* c = *++p; */
-                ++p;
-              }
+            quoteEnd = json__find_quote_len(p, limit, quote);
+            if (!quoteEnd)
+              goto err;
 
-              c = *++p;
-            }
+            end = json__rtrim_ascii(p, quoteEnd);
 
             /* skip trailing quote */
-            /* c = *++p; */
-            ++p;
+            p = quoteEnd + 1;
           } else {
-            while (c != ',' && c != '{' && c != '}' && c != '[' && c != ']') {
-              if (c == '\0')
+            const char *valueBegin;
+
+            valueBegin = p;
+            do {
+              p++;
+              if (p >= limit)
                 goto err;
+              c = *p;
+            } while (!json__value_end(c));
 
-              if (c != ' ' && c != '\r' && c != '\n' && c != '\t')
-                end = p + 1;
-
-              c = *++p;
-            }
+            end = json__rtrim_ascii(valueBegin, p);
           }
 
           val->valsize = (int)(end - (char *)val->value);
@@ -258,7 +257,7 @@ json_parse(const char * __restrict contents, bool reverse) {
         } /* if lookingForKey */
       } /* switch->default */
     } /* switch */
-  } while ((c = *p) != '\0' && (c = *++p) != '\0');
+  } while (p < limit && ++p < limit && (c = *p, true));
 
 err:
   if (tmproot.value) {

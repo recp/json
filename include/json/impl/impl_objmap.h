@@ -19,6 +19,8 @@ json_objmap(json_t        * __restrict obj,
             size_t                     count) {
   json_objmap_t *item;
   size_t         start, end, i;
+  int            keysize;
+  char           first;
 
   if (!obj || obj->type != JSON_OBJECT || !(obj = obj->value))
     return;
@@ -27,10 +29,17 @@ json_objmap(json_t        * __restrict obj,
   end   = count;
 
   while (obj) {
+    keysize = obj->keysize;
+    first   = obj->key ? obj->key[0] : '\0';
     for (i = start; i < end; i++) {
       item = &objmap[i];
 
-      if (json_key_eq(obj, item->key)) {
+      if (!item->keysize)
+        item->keysize = strlen(item->key);
+
+      if ((size_t)keysize == item->keysize
+          && first == item->key[0]
+          && memcmp(item->key, obj->key, item->keysize) == 0) {
         item->object = obj;
         if (i == start)
           start++;

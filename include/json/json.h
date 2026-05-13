@@ -41,6 +41,10 @@ JSON_INLINE
 json_doc_t*
 json_parse(const char * __restrict contents, bool reverse);
 
+JSON_INLINE
+json_doc_t*
+json_parse_len(const char * __restrict contents, size_t len, bool reverse);
+
 /*!
  * @brief frees json document and its allocated memory
  */
