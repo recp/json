@@ -34,12 +34,20 @@ json_objmap(json_t        * __restrict obj,
     for (i = start; i < end; i++) {
       item = &objmap[i];
 
-      if (!item->keysize)
+      if (!item->keysize) {
         item->keysize = strlen(item->key);
+        if (item->keysize <= 8)
+          item->keypack = json__pack8(item->key, item->keysize);
+      }
 
       if ((size_t)keysize == item->keysize
           && first == item->key[0]
-          && memcmp(item->key, obj->key, item->keysize) == 0) {
+          && (item->keysize <= 8
+              ? json__bytes_eq_packed(obj->key,
+                                      item->keysize,
+                                      item->keypack,
+                                      item->keysize)
+              : memcmp(item->key, obj->key, item->keysize) == 0)) {
         item->object = obj;
         if (i == start)
           start++;

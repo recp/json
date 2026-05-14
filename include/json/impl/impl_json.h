@@ -59,12 +59,10 @@ json_parse_len(const char * __restrict contents, size_t len, bool reverse) {
       case '\r':
       case '\n':
       case '\t':
-        do {
-          p++;
-          if (p >= limit)
-            goto err;
-          c = *p;
-        } while (json__ascii_space(c));
+        p = json__skip_ascii_space_len(p, limit);
+        if (p >= limit)
+          goto err;
+        c = *p;
 
         goto again;
       case '{':
@@ -227,12 +225,9 @@ json_parse_len(const char * __restrict contents, size_t len, bool reverse) {
             const char *valueBegin;
 
             valueBegin = p;
-            do {
-              p++;
-              if (p >= limit)
-                goto err;
-              c = *p;
-            } while (!json__value_end(c));
+            p = json__find_value_end_len(p, limit);
+            if (!p)
+              goto err;
 
             end = json__rtrim_ascii(valueBegin, p);
           }

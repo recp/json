@@ -29,6 +29,18 @@
     .object       = NULL,                                                     \
     .key          = KEY,                                                      \
     .keysize      = 0,                                                        \
+    .keypack      = 0,                                                        \
+    .foundFunc    = {FUN, PARAM},                                             \
+    .notFoundFunc = {NULL, NULL},                                             \
+    .userdata     = NULL                                                      \
+  }
+
+#define JSON_OBJMAP_FNP(KEY, KEYSIZE, KEYPACK, FUN, PARAM)                   \
+  {                                                                           \
+    .object       = NULL,                                                     \
+    .key          = KEY,                                                      \
+    .keysize      = KEYSIZE,                                                  \
+    .keypack      = KEYPACK,                                                  \
     .foundFunc    = {FUN, PARAM},                                             \
     .notFoundFunc = {NULL, NULL},                                             \
     .userdata     = NULL                                                      \
@@ -39,6 +51,18 @@
     .object       = NULL,                                                     \
     .key          = KEY,                                                      \
     .keysize      = 0,                                                        \
+    .keypack      = 0,                                                        \
+    .foundFunc    = {NULL, NULL},                                             \
+    .notFoundFunc = {NULL, NULL},                                             \
+    .userdata     = USERDATA                                                  \
+  }
+
+#define JSON_OBJMAP_OBJP(KEY, KEYSIZE, KEYPACK, USERDATA)                    \
+  {                                                                           \
+    .object       = NULL,                                                     \
+    .key          = KEY,                                                      \
+    .keysize      = KEYSIZE,                                                  \
+    .keypack      = KEYPACK,                                                  \
     .foundFunc    = {NULL, NULL},                                             \
     .notFoundFunc = {NULL, NULL},                                             \
     .userdata     = USERDATA                                                  \
@@ -56,6 +80,7 @@ typedef struct json_objmap_t {
   json_t     *object; /* found json object */
   const char *key;
   size_t      keysize;
+  uint64_t    keypack;
   void       *userdata;
   json_func_t foundFunc;
   json_func_t notFoundFunc;

@@ -73,6 +73,29 @@ json__ascii_space(char c) {
 }
 
 JSON_INLINE
+const char *
+json__skip_ascii_space_len(const char * __restrict p,
+                           const char * __restrict end) {
+  const uint64_t spaces = 0x2020202020202020ull;
+
+  while (p < end && json__ascii_space(*p)) {
+    if ((size_t)(end - p) >= sizeof(uint64_t)) {
+      uint64_t v;
+
+      memcpy(&v, p, sizeof(v));
+      if (v == spaces) {
+        p += sizeof(v);
+        continue;
+      }
+    }
+
+    p++;
+  }
+
+  return p;
+}
+
+JSON_INLINE
 bool
 json__value_end(char c) {
   return c == ','
@@ -80,6 +103,42 @@ json__value_end(char c) {
       || c == '}'
       || c == '['
       || c == ']';
+}
+
+JSON_INLINE
+bool
+json__has_zero_byte8(uint64_t v) {
+  return ((v - 0x0101010101010101ull) & ~v & 0x8080808080808080ull) != 0;
+}
+
+JSON_INLINE
+bool
+json__has_value_end8(uint64_t v) {
+  return json__has_zero_byte8(v ^ 0x2c2c2c2c2c2c2c2cull)
+      || json__has_zero_byte8(v ^ 0x7b7b7b7b7b7b7b7bull)
+      || json__has_zero_byte8(v ^ 0x7d7d7d7d7d7d7d7dull)
+      || json__has_zero_byte8(v ^ 0x5b5b5b5b5b5b5b5bull)
+      || json__has_zero_byte8(v ^ 0x5d5d5d5d5d5d5d5dull);
+}
+
+JSON_INLINE
+const char *
+json__find_value_end_len(const char * __restrict p,
+                         const char * __restrict end) {
+  while ((size_t)(end - p) >= sizeof(uint64_t)) {
+    uint64_t v;
+
+    memcpy(&v, p, sizeof(v));
+    if (json__has_value_end8(v))
+      break;
+
+    p += sizeof(v);
+  }
+
+  while (p < end && !json__value_end(*p))
+    p++;
+
+  return p < end ? p : NULL;
 }
 
 JSON_INLINE
