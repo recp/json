@@ -175,7 +175,7 @@ json__find_quote(const char * __restrict p, char quote) {
   const char *found;
 
   while ((found = strchr(p, quote))) {
-    if (!json__quote_escaped(p, found))
+    if (found == p || found[-1] != '\\' || !json__quote_escaped(p, found))
       return found;
 
     p = found + 1;
@@ -192,7 +192,7 @@ json__find_quote_len(const char * __restrict p,
   const char *found;
 
   while (p < end && (found = memchr(p, quote, (size_t)(end - p)))) {
-    if (!json__quote_escaped(p, found))
+    if (found == p || found[-1] != '\\' || !json__quote_escaped(p, found))
       return found;
 
     p = found + 1;
