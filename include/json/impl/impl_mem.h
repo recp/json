@@ -20,7 +20,7 @@ typedef struct json_mem_t {
 } json_mem_t;
 
 #define JSON_MEM_PAGE     (32768 - sizeof(json_mem_t))  /* 32K */
-#define JSON_MEM_MAX_PAGE (262144 - sizeof(json_mem_t)) /* 256K */
+#define JSON_MEM_MAX_PAGE (1048576 - sizeof(json_mem_t)) /* 1M */
 
 JSON_INLINE
 void*

@@ -132,7 +132,10 @@ json_parse_len(const char * __restrict contents, size_t len, bool reverse) {
       default: {
         /* looking for key */
         if (lookingForKey) {
-          if ((foundQuote = (c == '"' || c == '\'' || c == '`'))) {
+          if ((foundQuote = c == '"')) {
+            quote = '"';
+            c     = *++p;
+          } else if ((foundQuote = (c == '\'' || c == '`'))) {
             quote = c;
             c     = *++p;
           }
@@ -202,7 +205,10 @@ json_parse_len(const char * __restrict contents, size_t len, bool reverse) {
             key          = NULL;
           }
           
-          if ((foundQuote = (c == '"' || c == '\'' || c == '`'))) {
+          if ((foundQuote = c == '"')) {
+            quote = '"';
+            c     = *++p;
+          } else if ((foundQuote = (c == '\'' || c == '`'))) {
             quote = c;
             c     = *++p;
           }
