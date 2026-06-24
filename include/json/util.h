@@ -299,9 +299,11 @@ json__parse_float(const char * __restrict p,
 JSON_INLINE
 int32_t
 json_int32(const json_t * __restrict object, int32_t defaultValue) {
+  const char *begin;
   const char *end;
 
-  return json__parse_int32(json__num_begin(object, &end), end, defaultValue);
+  begin = json__num_begin(object, &end);
+  return json__parse_int32(begin, end, defaultValue);
 }
 
 /*!
@@ -314,9 +316,11 @@ json_int32(const json_t * __restrict object, int32_t defaultValue) {
 JSON_INLINE
 uint32_t
 json_uint32(const json_t * __restrict object, uint32_t defaultValue) {
+  const char *begin;
   const char *end;
 
-  return json__parse_uint32(json__num_begin(object, &end), end, defaultValue);
+  begin = json__num_begin(object, &end);
+  return json__parse_uint32(begin, end, defaultValue);
 }
 
 /*!
@@ -329,9 +333,11 @@ json_uint32(const json_t * __restrict object, uint32_t defaultValue) {
 JSON_INLINE
 int64_t
 json_int64(const json_t * __restrict object, int64_t defaultValue) {
+  const char *begin;
   const char *end;
 
-  return json__parse_int64(json__num_begin(object, &end), end, defaultValue);
+  begin = json__num_begin(object, &end);
+  return json__parse_int64(begin, end, defaultValue);
 }
 
 /*!
@@ -344,9 +350,11 @@ json_int64(const json_t * __restrict object, int64_t defaultValue) {
 JSON_INLINE
 uint64_t
 json_uint64(const json_t * __restrict object, uint64_t defaultValue) {
+  const char *begin;
   const char *end;
 
-  return json__parse_uint64(json__num_begin(object, &end), end, defaultValue);
+  begin = json__num_begin(object, &end);
+  return json__parse_uint64(begin, end, defaultValue);
 }
 
 /*!
@@ -359,9 +367,11 @@ json_uint64(const json_t * __restrict object, uint64_t defaultValue) {
 JSON_INLINE
 float
 json_float(const json_t * __restrict object, float defaultValue) {
+  const char *begin;
   const char *end;
 
-  return json__parse_float(json__num_begin(object, &end), end, defaultValue);
+  begin = json__num_begin(object, &end);
+  return json__parse_float(begin, end, defaultValue);
 }
 
 /*!
@@ -374,9 +384,11 @@ json_float(const json_t * __restrict object, float defaultValue) {
 JSON_INLINE
 double
 json_double(const json_t * __restrict object, double defaultValue) {
+  const char *begin;
   const char *end;
 
-  return json__parse_double(json__num_begin(object, &end), end, defaultValue);
+  begin = json__num_begin(object, &end);
+  return json__parse_double(begin, end, defaultValue);
 }
 
 /*!
